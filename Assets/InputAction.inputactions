@@ -1,0 +1,35 @@
+{
+    "version": 1,
+    "name": "InputAction",
+    "maps": [
+        {
+            "name": "Temp",
+            "id": "4bdbdee2-c6d2-4699-85e2-ad03dd5c6a8b",
+            "actions": [
+                {
+                    "name": "DrawCard",
+                    "type": "Button",
+                    "id": "e21feffb-c2e2-458b-95c9-0a3d087ac95b",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "c5387b36-d194-4305-a9e3-330378119fa6",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DrawCard",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

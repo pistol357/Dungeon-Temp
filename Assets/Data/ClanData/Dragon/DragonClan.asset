@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 536401677804b284993520e5d207a48c, type: 3}
+  m_Name: DragonClan
+  m_EditorClassIdentifier: Assembly-CSharp::Clan
+  _name: Dragon
+  _clanMonster: {fileID: 11400000, guid: 4aff1c263bf866c4397a0f068b000baf, type: 2}
+  _ability: Heal
+  _maxSummon: 1
+  _initialSummon: 1
+  _canSummonRoom: TreasureRoom
+  _monsterCardList:
+  - {fileID: 11400000, guid: ad499aed109571242a8d55dfb309e051, type: 2}
+  - {fileID: 11400000, guid: 8c26797223a6db442a623efa945d8440, type: 2}
+  - {fileID: 11400000, guid: e801bdc17c3ff5c4b940bb6515a9edb5, type: 2}
+  _monsterCardQuantity: 030000000200000005000000
