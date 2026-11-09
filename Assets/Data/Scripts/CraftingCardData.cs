@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "CraftingCard", menuName = "Scriptable Objects/CraftingCard")]
-public class CraftingCard : ScriptableObject
+[CreateAssetMenu(fileName = "CraftingCardData", menuName = "Scriptable Objects/CraftingCardData")]
+public class CraftingCardData : ScriptableObject
 {
     [SerializeField] private CardType _cardType;
     [SerializeField] private List<ActionType> _actionList;

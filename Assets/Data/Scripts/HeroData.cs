@@ -1,7 +1,7 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Hero", menuName = "Scriptable Objects/Hero")]
-public class Hero : ScriptableObject
+[CreateAssetMenu(fileName = "HeroData", menuName = "Scriptable Objects/HeroData")]
+public class HeroData : ScriptableObject
 {
     [SerializeField] private HeroType _heroType;
     [SerializeField] private int _maxHp;

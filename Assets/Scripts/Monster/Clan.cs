@@ -2,14 +2,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class AssetClan : MonoBehaviour
+public class Clan : MonoBehaviour
 {
-    [SerializeField] private InputActionReference _inputAction;
-    [SerializeField] private Canvas _canvas;
-    [SerializeField] private Clan _clanData;
+    [SerializeField] private InputActionReference _drawAction;
+    [SerializeField] private InputActionReference _useAction;
+    [SerializeField] private InputActionReference _finishAction;
+    [SerializeField] private Transform _handUI;
+    [SerializeField] private ClanData _clanData;
     [SerializeField] private int _currentRemainMonster;
     [SerializeField] private List<PlayCard> _deck;
     [SerializeField] private List<PlayCard> _hand;
+    [SerializeField] private List<PlayCard> _open;
     [SerializeField] private List<PlayCard> _discard;
     [SerializeField] private PlayCardObject _playCardPrefab;
 
@@ -26,7 +29,7 @@ public class AssetClan : MonoBehaviour
             _hand.Add(card);
 
             card.SetCardState(CardState.Hand);
-            Instantiate(_playCardPrefab, _canvas.transform).SetCard(card);
+            Instantiate(_playCardPrefab, _handUI.transform).SetCard(card);
             Debug.Log(card);
         }
         else if(_deck.Count == 0)
@@ -47,15 +50,25 @@ public class AssetClan : MonoBehaviour
         if(_hand.Contains(card) && card.CardState == CardState.Hand)
         {
             card.SetCardState(CardState.Open);
+            _hand.Remove(card);
+            _open.Add(card);
+            Debug.Log($"{card} 사용됨");
+        }
+        else
+        {
+            Debug.Log($"{card} 사용 불가");
         }
     }
 
     private void FinishTurn()
     {
-        foreach(PlayCard card in _hand)
+        foreach(PlayCard card in _open)
         {
-            if (card.CardState == CardState.Open) Discard(card);
+            card.SetCardState(CardState.Discard);
+            _discard.Add(card);
         }
+
+        _open.Clear();
 
         while(_hand.Count < 5)
         {
@@ -66,6 +79,8 @@ public class AssetClan : MonoBehaviour
     private void Discard(PlayCard card)
     {
         if(_hand.Contains(card)) _hand.Remove(card);
+
+        card.SetCardState(CardState.Discard);
         _discard.Add(card);
     }
 
@@ -86,16 +101,17 @@ public class AssetClan : MonoBehaviour
         _currentRemainMonster = _clanData.MaxSummon;
         _deck = new();
         _hand = new();
+        _open = new();
         _discard = new();
 
         for(int i = 0; i < _clanData.MonsterCardList.Count; i++)
         {
-            MonsterCard data = _clanData.MonsterCardList[i];
+            MonsterCardData data = _clanData.MonsterCardList[i];
             int times = _clanData.MonsterCardQuantity[i];
 
             for(int j = 0; j < times; j++)
             {
-                MonsterPlayCard card = new MonsterPlayCard(CardState.Fin, data);
+                MonsterPlayCard card = new MonsterPlayCard(CardState.Discard, data);
                 _discard.Add(card);
             }
         }
@@ -105,18 +121,42 @@ public class AssetClan : MonoBehaviour
 
     private void BindInputAction()
     {
-        _inputAction.action.Enable();
-        _inputAction.action.performed += OnDrawCard;
+        _drawAction.action.Enable();
+        _useAction.action.Enable();
+        _finishAction.action.Enable();
+        _drawAction.action.performed += OnDrawCard;
+        _useAction.action.performed += OnUseCard;
+        _finishAction.action.performed += OnFinishTurn;
     }
 
     private void UnbindInputAction()
     {
-        _inputAction.action.Disable();
-        _inputAction.action.performed -= OnDrawCard;
+        _drawAction.action.Disable();
+        _useAction.action.Disable();
+        _finishAction.action.Disable();
+        _drawAction.action.performed -= OnDrawCard;
+        _useAction.action.performed -= OnUseCard;
+        _finishAction.action.performed -= OnFinishTurn;
     }
 
     private void OnDrawCard(InputAction.CallbackContext context)
     {
         DrawCard();
+    }
+
+    private void OnUseCard(InputAction.CallbackContext context)
+    {
+        if(_hand.Count <= 0)
+        {
+            Debug.Log($"손 패 부족");
+            return;
+        }
+
+        UseCard(_hand[0]);
+    }
+
+    private void OnFinishTurn(InputAction.CallbackContext context)
+    {
+        FinishTurn();
     }
 }

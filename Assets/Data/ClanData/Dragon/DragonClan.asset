@@ -17,7 +17,7 @@ MonoBehaviour:
   _ability: Heal
   _maxSummon: 1
   _initialSummon: 1
-  _canSummonRoom: TreasureRoom
+  _canSummonRoom: 4
   _monsterCardList:
   - {fileID: 11400000, guid: ad499aed109571242a8d55dfb309e051, type: 2}
   - {fileID: 11400000, guid: 8c26797223a6db442a623efa945d8440, type: 2}

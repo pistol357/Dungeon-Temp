@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 32dddd45a78dbd5469c5e8dfc5441bcf, type: 3}
-  m_Name: GuildCard1
+  m_Name: ArcherCard4
   m_EditorClassIdentifier: Assembly-CSharp::GuildCard
-  _summonHero: 0
-  _summonRoom: 
+  _summonHero: 1
+  _summonRoom: 3
   _summonQuantity: 2

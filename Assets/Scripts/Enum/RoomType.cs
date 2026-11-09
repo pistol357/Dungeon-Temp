@@ -1,7 +1,9 @@
 public enum RoomType
 {
-    a,
-    b,
-    c,
-    d
+    Sword,
+    Eye,
+    Skull,
+    Hat,
+    Treasure,
+    Jail
 }

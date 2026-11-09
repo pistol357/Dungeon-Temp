@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "MonsterCard", menuName = "Scriptable Objects/MonsterCard")]
-public class MonsterCard : ScriptableObject
+[CreateAssetMenu(fileName = "MonsterCardData", menuName = "Scriptable Objects/MonsterCardData")]
+public class MonsterCardData : ScriptableObject
 {
     [SerializeField] private int _id;
     [SerializeField] private List<ActionType> _actionList1;

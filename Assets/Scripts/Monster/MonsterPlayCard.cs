@@ -2,11 +2,11 @@ using UnityEngine;
 
 public class MonsterPlayCard : PlayCard
 {
-    [SerializeField] private MonsterCard _monsterCardData;
+    [SerializeField] private MonsterCardData _monsterCardData;
 
-    public MonsterCard MonsterCardData => _monsterCardData;
+    public MonsterCardData MonsterCardData => _monsterCardData;
 
-    public MonsterPlayCard(CardState state, MonsterCard data)
+    public MonsterPlayCard(CardState state, MonsterCardData data)
     {
         _cardState = state;
         _monsterCardData = data;

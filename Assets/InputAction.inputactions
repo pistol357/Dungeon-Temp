@@ -14,6 +14,24 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "UseCard",
+                    "type": "Button",
+                    "id": "3d630fd0-a322-4483-81f9-ca749050d77f",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "FinishTurn",
+                    "type": "Button",
+                    "id": "afa2f7ef-4da9-45d5-a8e3-89028b1def8f",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -25,6 +43,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "DrawCard",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "dea173f1-2422-42e8-bcf5-b04ffc982636",
+                    "path": "<Keyboard>/1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "UseCard",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9453270c-37f8-4cb0-b3cf-2924c7382ec3",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "FinishTurn",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
