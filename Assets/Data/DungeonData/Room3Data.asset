@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Room3Data
   m_EditorClassIdentifier: Assembly-CSharp::RoomData
   _roomType: 1
-  _name: 
+  _name: "\uBB18\uC9C0"
   _activate: 1
   _resourceType: 4
   _craftingCard: 0

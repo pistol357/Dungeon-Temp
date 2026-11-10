@@ -1,0 +1,67 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6820915541205343671
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3887007596859157901}
+  - component: {fileID: 3615509641986550986}
+  - component: {fileID: 8042749800870342805}
+  m_Layer: 0
+  m_Name: DragonClan
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3887007596859157901
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6820915541205343671}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.81791, y: -0, z: 1.81791}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3615509641986550986
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6820915541205343671}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4d6af290c35bd448a938f504a16968a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DragonClan
+  _drawAction: {fileID: -4756763178795976867, guid: 5a3a7b47dd3ce0c4db4648db85624f9a, type: 3}
+  _useAction: {fileID: 216280242988769586, guid: 5a3a7b47dd3ce0c4db4648db85624f9a, type: 3}
+  _finishAction: {fileID: 7968101296048834618, guid: 5a3a7b47dd3ce0c4db4648db85624f9a, type: 3}
+  _clanData: {fileID: 11400000, guid: f7bd74917eabb524d9b205094a38da22, type: 2}
+  _monster: {fileID: 4983655692223104094, guid: 221baedd294351d41b02eb3fe835315f, type: 3}
+  _currentRemainMonster: 0
+  _deckManager: {fileID: 0}
+--- !u!114 &8042749800870342805
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6820915541205343671}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc55bc525cc62ce4f8ddc32a4b3f014d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DeckManager
+  _playCardPrefab: {fileID: 0}

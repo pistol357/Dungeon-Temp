@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.Android.Gradle.Manifest;
 using UnityEngine;
 
 public class DungeonMap : MonoBehaviour
@@ -9,6 +10,8 @@ public class DungeonMap : MonoBehaviour
 
     private List<int> _visited;
     private Dictionary<int, int> _distances;
+
+    public List<Room> Rooms => _rooms;
 
     private void Start() => Init();
 
@@ -66,9 +69,10 @@ public class DungeonMap : MonoBehaviour
         _visited = new();
         _distances = new();
 
-        foreach(RoomData data in _scenarioData.Rooms)
+        for(int i = 0; i < _scenarioData.Rooms.Count; i++)
         {
-            Room room = new Room(data);
+            RoomData data = _scenarioData.Rooms[i];
+            Room room = new Room(data, i);
             _rooms.Add(room);
         }
 

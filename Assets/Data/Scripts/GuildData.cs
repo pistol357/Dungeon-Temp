@@ -5,8 +5,14 @@ using UnityEngine;
 public class GuildData : ScriptableObject
 {
     [SerializeField] private int _maxSummon;
-    [SerializeField] private HeroData _warriorList;
-    [SerializeField] private HeroData _archerList;
-    [SerializeField] private HeroData _rogueList;
+    [SerializeField] private HeroData _warrior;
+    [SerializeField] private HeroData _archer;
+    [SerializeField] private HeroData _rogue;
     [SerializeField] private List<GuildCardData> _guildCardList;
+
+    public int MaxSummon => _maxSummon;
+    public HeroData Warrior => _warrior;
+    public HeroData Archer => _archer;
+    public HeroData Rogue => _rogue;
+    public List<GuildCardData> GuildCardList => _guildCardList;
 }

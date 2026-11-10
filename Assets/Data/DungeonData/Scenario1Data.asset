@@ -34,3 +34,25 @@ MonoBehaviour:
   - {x: 5, y: 6}
   - {x: 6, y: 7}
   - {x: 8, y: 9}
+  _treasures:
+  - {fileID: 11400000, guid: ea12f4060370de84198bd03ade06d7b1, type: 2}
+  - {fileID: 11400000, guid: 377b91502ebf4b74a8886bf3921da692, type: 2}
+  - {fileID: 11400000, guid: 94d3da82f7e46c949a1a2b5e22e230b4, type: 2}
+  - {fileID: 11400000, guid: 1ebe41968ec7bde479b20206fc3860d9, type: 2}
+  - {fileID: 11400000, guid: 6a8229610270cbd458434a8ca82016d3, type: 2}
+  - {fileID: 11400000, guid: 379d7a45e342a6e4cac58bbb71d072b6, type: 2}
+  - {fileID: 11400000, guid: 958c8a369997b3d4ab33963c07fe0d5c, type: 2}
+  - {fileID: 11400000, guid: 6011d799120fe9a4cba699917d7d0dc2, type: 2}
+  - {fileID: 11400000, guid: 0bc4387862995c647a2206807a125094, type: 2}
+  - {fileID: 11400000, guid: 6495a0ce3fb5c574da75455139e09c03, type: 2}
+  _roomToTreasure:
+  - {x: 0, y: 0}
+  - {x: 1, y: 1}
+  - {x: 2, y: 4}
+  - {x: 3, y: 7}
+  - {x: 4, y: 9}
+  - {x: 5, y: 8}
+  - {x: 6, y: 5}
+  - {x: 7, y: 2}
+  - {x: 8, y: 3}
+  - {x: 9, y: 6}

@@ -1083,57 +1083,67 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1996129794}
   m_CullTransparentMesh: 1
---- !u!1 &2032424642
-GameObject:
+--- !u!1001 &6347046583274234258
+PrefabInstance:
   m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2032424644}
-  - component: {fileID: 2032424643}
-  m_Layer: 0
-  m_Name: DragonClan
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &2032424643
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2032424642}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b4d6af290c35bd448a938f504a16968a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DragonClan
-  _drawAction: {fileID: -4756763178795976867, guid: 5a3a7b47dd3ce0c4db4648db85624f9a, type: 3}
-  _useAction: {fileID: 216280242988769586, guid: 5a3a7b47dd3ce0c4db4648db85624f9a, type: 3}
-  _finishAction: {fileID: 7968101296048834618, guid: 5a3a7b47dd3ce0c4db4648db85624f9a, type: 3}
-  _handUI: {fileID: 1224085829}
-  _clanData: {fileID: 11400000, guid: f7bd74917eabb524d9b205094a38da22, type: 2}
-  _currentRemainMonster: 0
-  _playCardPrefab: {fileID: 6113956247646653023, guid: 68d87b763333db040b461eda81378212, type: 3}
---- !u!4 &2032424644
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2032424642}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.81791, y: -0, z: 1.81791}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3615509641986550986, guid: 103c4efb90bf06241a72d867cede3b21, type: 3}
+      propertyPath: _handUI
+      value: 
+      objectReference: {fileID: 1224085829}
+    - target: {fileID: 3887007596859157901, guid: 103c4efb90bf06241a72d867cede3b21, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1.81791
+      objectReference: {fileID: 0}
+    - target: {fileID: 3887007596859157901, guid: 103c4efb90bf06241a72d867cede3b21, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3887007596859157901, guid: 103c4efb90bf06241a72d867cede3b21, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 1.81791
+      objectReference: {fileID: 0}
+    - target: {fileID: 3887007596859157901, guid: 103c4efb90bf06241a72d867cede3b21, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3887007596859157901, guid: 103c4efb90bf06241a72d867cede3b21, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3887007596859157901, guid: 103c4efb90bf06241a72d867cede3b21, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3887007596859157901, guid: 103c4efb90bf06241a72d867cede3b21, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3887007596859157901, guid: 103c4efb90bf06241a72d867cede3b21, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3887007596859157901, guid: 103c4efb90bf06241a72d867cede3b21, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3887007596859157901, guid: 103c4efb90bf06241a72d867cede3b21, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6820915541205343671, guid: 103c4efb90bf06241a72d867cede3b21, type: 3}
+      propertyPath: m_Name
+      value: DragonClan
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 103c4efb90bf06241a72d867cede3b21, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -1141,6 +1151,6 @@ SceneRoots:
   - {fileID: 330585546}
   - {fileID: 410087041}
   - {fileID: 832575519}
-  - {fileID: 2032424644}
+  - {fileID: 6347046583274234258}
   - {fileID: 1469393076}
   - {fileID: 1219133768}

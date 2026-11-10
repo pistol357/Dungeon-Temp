@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Guild
   m_EditorClassIdentifier: Assembly-CSharp::Guild
   _maxSummon: 5
-  _warriorList: {fileID: 11400000, guid: 3346f0105f43e7540bf8ccfd8a366df7, type: 2}
-  _archerList: {fileID: 11400000, guid: 0bd579b02766a39449f93b5e869a9bd9, type: 2}
-  _rogueList: {fileID: 11400000, guid: 2e24c6e59a8feb24ebb892b2f3f7499e, type: 2}
+  _warrior: {fileID: 11400000, guid: 3346f0105f43e7540bf8ccfd8a366df7, type: 2}
+  _archer: {fileID: 11400000, guid: 0bd579b02766a39449f93b5e869a9bd9, type: 2}
+  _rogue: {fileID: 11400000, guid: 2e24c6e59a8feb24ebb892b2f3f7499e, type: 2}
   _guildCardList:
   - {fileID: 11400000, guid: 820893401a2dc764e818ab84ea3133fa, type: 2}
   - {fileID: 11400000, guid: ec63c00a043416a4791ae35ad60f7cc3, type: 2}

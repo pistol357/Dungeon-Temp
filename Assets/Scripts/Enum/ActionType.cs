@@ -5,7 +5,17 @@ public enum ActionType
     Activate,
     SRAttack,
     LRAttack,
-    Summon,
-    Create,
-    Defense
+    Defense,
+    SummonInSameRoom,
+    SummonInSword,
+    SummonInEye,
+    SummonInSkull,
+    SummonInHat,
+    SummonInTreasure,
+    SummonInJail,
+    CreateCoin,
+    CreateBook,
+    CreateFrog,
+    CreateBone,
+    CreateTrap
 }
