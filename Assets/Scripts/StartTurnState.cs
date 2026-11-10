@@ -13,7 +13,7 @@ public class StartTurnState : IState
     public void Enter()
     {
         _currentClan = _turnManager.CurrentTurnClan;
-        Debug.Log($"{_currentClan} turn");
+        Debug.Log($"{_currentClan} turn start");
     }
 
     public void Execute()

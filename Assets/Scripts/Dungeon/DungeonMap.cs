@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Unity.Android.Gradle.Manifest;
 using UnityEngine;
 
 public class DungeonMap : MonoBehaviour
@@ -56,6 +55,19 @@ public class DungeonMap : MonoBehaviour
         }
 
         return current;
+    }
+
+    public Room GetRoomByNumber(int number)
+    {
+        foreach(Room room in _rooms)
+        {
+            if(room.RoomNumber == number)
+            {
+                return room;
+            }
+        }
+
+        return null;
     }
 
     private void Init()

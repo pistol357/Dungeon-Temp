@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -8,9 +9,9 @@ public class Clan : MonoBehaviour
     [SerializeField] private InputActionReference _finishAction;
     [SerializeField] private DungeonMap _dungeonMap;
     [SerializeField] private ClanData _clanData;
-    [SerializeField] private Monster _monster;
-    [SerializeField] private int _currentRemainMonster;
     [SerializeField] private DeckManager _deckManager;
+
+    private Stack<Monster> _monsters = new();
 
     private void Awake() => CacheComponents();
     private void OnEnable() => BindInputAction();
@@ -25,31 +26,31 @@ public class Clan : MonoBehaviour
         }
         else if (action == ActionType.Move)
         {
-            _monster.Move();
+            // _monster.Move();
         }
         else if (action == ActionType.Activate)
         {
-            _monster.Activate();
+            // _monster.Activate();
         }
         else if (action == ActionType.SRAttack)
         {
-            _monster.SRAttack();
+            // _monster.SRAttack();
         }
         else if (action == ActionType.LRAttack)
         {
-            _monster.LRAttack();
+            // _monster.LRAttack();
         }
         else if (action == ActionType.Defense)
         {
-            _monster.Defense();
+            // _monster.Defense();
         }
         else if (ActionType.SummonInSameRoom <= action && action <= ActionType.SummonInJail)
         {
-            SummonIn(action);
+            SummonByActionType(action);
         }
         else if (ActionType.CreateCoin <= action && action <= ActionType.CreateTrap)
         {
-            _monster.Create(action);
+            // _monster.Create(action);
         }
     }
 
@@ -57,47 +58,31 @@ public class Clan : MonoBehaviour
     {
         RoomType initSummonRoom = _clanData.CanSummonRoom;
 
-        switch (initSummonRoom)
-        {
-            case RoomType.Sword:
-                Action(ActionType.SummonInSword);
-                return;
-            case RoomType.Eye:
-                Action(ActionType.SummonInEye);
-                return;
-            case RoomType.Hat:
-                Action(ActionType.SummonInHat);
-                return;
-            case RoomType.Skull:
-                Action(ActionType.SummonInSkull);
-                return;
-            case RoomType.Treasure:
-                Action(ActionType.SummonInTreasure);
-                return;
-            default:
-                Debug.Log($"초기 소환 방 타입 잘못됨");
-                return;
-        }
+        SummonIn(initSummonRoom);
+        TurnManager.Instance.StateMachine.ChangeState(TurnManager.Instance.EndTurnState);
     }
 
-    private void SummonIn(ActionType action)
+    private void SummonByActionType(ActionType action)
     {
         switch (action)
         {
+            case ActionType.SummonInSameRoom:
+                // Summon(_monster);
+                return;
             case ActionType.SummonInSword:
-                Summon(RoomType.Sword);
+                SummonIn(RoomType.Sword);
                 return;
             case ActionType.SummonInEye:
-                Summon(RoomType.Eye);
+                SummonIn(RoomType.Eye);
                 return;
             case ActionType.SummonInHat:
-                Summon(RoomType.Hat);
+                SummonIn(RoomType.Hat);
                 return;
             case ActionType.SummonInSkull:
-                Summon(RoomType.Skull);
+                SummonIn(RoomType.Skull);
                 return;
             case ActionType.SummonInTreasure:
-                Summon(RoomType.Treasure);
+                SummonIn(RoomType.Treasure);
                 return;
             default:
                 Debug.Log($"소환 방 타입 잘못됨");
@@ -105,15 +90,47 @@ public class Clan : MonoBehaviour
         }
     }
 
-    private void Summon(RoomType room)
+    private void SummonIn(RoomType roomType)
     {
+        List<Room> canSummonRooms = new();
+
         for(int i = 0; i < _dungeonMap.Rooms.Count; i++)
         {
-            if (_dungeonMap.Rooms[i].RoomType == room)
+            Room room = _dungeonMap.Rooms[i];
+            if (room.RoomType == roomType)
             {
-
+                canSummonRooms.Add(room);
             }
         }
+
+        if(canSummonRooms.Count <= 0)
+        {
+            Debug.Log($"던전 방 그래프 이상");
+        }
+        else if(canSummonRooms.Count == 1)
+        {
+            Summon(canSummonRooms[0].RoomNumber);
+        }
+        else
+        {
+            Debug.Log($"소환 방 선택");
+        }
+    }
+
+    private void Summon(int roomNumber)
+    {
+        if(_monsters.Count <= 0)
+        {
+            Debug.Log($"소환 불가(남은 몬스터 없음)");
+            return;
+        }
+
+        Room room = _dungeonMap.GetRoomByNumber(roomNumber);
+        Monster monster = _monsters.Pop();
+
+        room.AddMonster(monster);
+        monster.SetRoom(room);
+        Debug.Log($"{monster.Name}(이)가 {room.Name}에 매복함");
     }
 
     private void CacheComponents()
@@ -123,7 +140,15 @@ public class Clan : MonoBehaviour
 
     private void Init()
     {
-        _currentRemainMonster = _clanData.MaxSummon;
+        int max = _clanData.MaxSummon;
+
+        for(int i = 0; i < max; i++)
+        {
+            MonsterData monsterData = _clanData.ClanMonster;
+            Monster monster = new Monster();
+            monster.SetData(monsterData);
+            _monsters.Push(monster);
+        }
 
         for (int i = 0; i < _clanData.MonsterCardList.Count; i++)
         {
@@ -136,9 +161,6 @@ public class Clan : MonoBehaviour
                 _deckManager.Discard(card);
             }
         }
-
-        MonsterData monsterData = _clanData.ClanMonster;
-        _monster.SetData(monsterData);
 
         _deckManager.FinishTurn();
     }

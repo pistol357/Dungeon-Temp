@@ -27,6 +27,19 @@ public class TurnManager : MonoBehaviour
     private void Start() => Init();
     private void Update() => StateMachine.Execute();
 
+    public void NextClan()
+    {
+        _currentTurnIndex++;
+
+        if(_currentTurnIndex == _clans.Count)
+        {
+            _currentRound++;
+            _currentTurnIndex %= _clans.Count;
+        }
+
+        _currentTurnClan = _clans[_currentTurnIndex];
+    }
+
     private void SetSingleton()
     {
         if (Instance != null && Instance != this)

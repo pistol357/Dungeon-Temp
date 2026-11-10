@@ -1,13 +1,15 @@
 using UnityEngine;
 
-public class Monster : MonoBehaviour
+public class Monster
 {
     [SerializeField] private MonsterData _data;
-    
+
+    private string _name;
     private int _hp;
     private Room _currentRoom;
     private State _state;
 
+    public string Name => _name;
     public Room CurrentRoom => _currentRoom;
 
     public void Move()
@@ -35,9 +37,9 @@ public class Monster : MonoBehaviour
 
     }
 
-    public void Summon(ActionType room)
+    public void SetRoom(Room room)
     {
-
+        _currentRoom = room;
     }
 
     public void Create(ActionType resource)
@@ -48,5 +50,7 @@ public class Monster : MonoBehaviour
     public void SetData(MonsterData data)
     {
         _data = data;
+        _name = data.name;
+        _hp = data.MaxHp;
     }
 }
