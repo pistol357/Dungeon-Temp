@@ -29,8 +29,8 @@ public class Clan : MonoBehaviour
             _hand.Add(card);
 
             card.SetCardState(CardState.Hand);
-            Instantiate(_playCardPrefab, _handUI.transform).SetCard(card);
-            Debug.Log(card);
+            Debug.Log($"{card} 뽑음");
+            Debug.Log($"덱 : {_deck.Count} / 손 : {_hand.Count} / 공개 : {_open.Count} / 버림 : {_discard.Count}");
         }
         else if(_deck.Count == 0)
         {
@@ -53,6 +53,7 @@ public class Clan : MonoBehaviour
             _hand.Remove(card);
             _open.Add(card);
             Debug.Log($"{card} 사용됨");
+            Debug.Log($"덱 : {_deck.Count} / 손 : {_hand.Count} / 공개 : {_open.Count} / 버림 : {_discard.Count}");
         }
         else
         {
@@ -94,6 +95,8 @@ public class Clan : MonoBehaviour
             _deck.Add(card);
             card.SetCardState(CardState.Deck);
         }
+
+        Debug.Log($"덱 : {_deck.Count} / 손 : {_hand.Count} / 공개 : {_open.Count} / 버림 : {_discard.Count}");
     }
 
     private void Init()
@@ -116,7 +119,7 @@ public class Clan : MonoBehaviour
             }
         }
 
-        Shuffle();
+        FinishTurn();
     }
 
     private void BindInputAction()
