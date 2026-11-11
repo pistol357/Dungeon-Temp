@@ -1,5 +1,6 @@
 public enum ActionType
 {
+    None,
     Draw,
     Move,
     Activate,

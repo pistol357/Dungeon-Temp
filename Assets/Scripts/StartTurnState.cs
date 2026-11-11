@@ -18,19 +18,11 @@ public class StartTurnState : IState
 
     public void Execute()
     {
-        if(_turnManager.CurrentRound == 0)
-        {
-            StartRound();
-        }
+        _turnManager.StateMachine.ChangeState(_turnManager.MonsterActionState);
     }
 
     public void Exit()
     {
 
-    }
-
-    private void StartRound()
-    {
-        _currentClan.InitSummon();
     }
 }

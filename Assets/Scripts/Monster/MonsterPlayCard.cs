@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class MonsterPlayCard : PlayCard
@@ -10,5 +11,12 @@ public class MonsterPlayCard : PlayCard
     {
         _cardState = state;
         _monsterCardData = data;
+        _cardAction?.Add(data.ActionList1);
+        _cardAction?.Add(data.ActionList2);
+    }
+
+    public override List<ActionType> GetActionList(int num)
+    {
+        return _cardAction[num];
     }
 }

@@ -7,25 +7,25 @@
             "id": "4bdbdee2-c6d2-4699-85e2-ad03dd5c6a8b",
             "actions": [
                 {
-                    "name": "DrawCard",
+                    "name": "Next",
                     "type": "Button",
-                    "id": "e21feffb-c2e2-458b-95c9-0a3d087ac95b",
+                    "id": "2b4ce385-9ec8-4424-a85f-bcf86187ac12",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
                 },
                 {
-                    "name": "UseCard",
+                    "name": "Select",
                     "type": "Button",
-                    "id": "3d630fd0-a322-4483-81f9-ca749050d77f",
+                    "id": "fcec9893-186f-4803-845a-f183c3b25771",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
                 },
                 {
-                    "name": "FinishTurn",
+                    "name": "End",
                     "type": "Button",
                     "id": "afa2f7ef-4da9-45d5-a8e3-89028b1def8f",
                     "expectedControlType": "",
@@ -37,34 +37,34 @@
             "bindings": [
                 {
                     "name": "",
-                    "id": "c5387b36-d194-4305-a9e3-330378119fa6",
+                    "id": "c9099806-a3af-41fd-a95a-c10cfcb099af",
+                    "path": "<Keyboard>/enter",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "End",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "13c9995f-0766-401e-9d46-c691f27afc03",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Next",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8efe9aad-c408-4945-bf44-cd097cbae933",
                     "path": "<Keyboard>/space",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "DrawCard",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "dea173f1-2422-42e8-bcf5-b04ffc982636",
-                    "path": "<Keyboard>/1",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "UseCard",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "9453270c-37f8-4cb0-b3cf-2924c7382ec3",
-                    "path": "<Keyboard>/q",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "FinishTurn",
+                    "action": "Select",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

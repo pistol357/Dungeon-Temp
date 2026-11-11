@@ -47,7 +47,7 @@ public class DungeonMap : MonoBehaviour
         }
     }
 
-    public int GetNextRoom(int current)
+    public int GetNextRoomNumber(int current)
     {
         foreach(int connection in _connections[current])
         {
@@ -68,6 +68,11 @@ public class DungeonMap : MonoBehaviour
         }
 
         return null;
+    }
+
+    public List<int> GetConnectedRoomList(int number)
+    {
+        return _connections[number];
     }
 
     private void Init()

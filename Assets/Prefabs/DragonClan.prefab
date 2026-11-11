@@ -45,12 +45,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4d6af290c35bd448a938f504a16968a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DragonClan
-  _drawAction: {fileID: -4756763178795976867, guid: 5a3a7b47dd3ce0c4db4648db85624f9a, type: 3}
-  _useAction: {fileID: 216280242988769586, guid: 5a3a7b47dd3ce0c4db4648db85624f9a, type: 3}
-  _finishAction: {fileID: 7968101296048834618, guid: 5a3a7b47dd3ce0c4db4648db85624f9a, type: 3}
+  _nextInput: {fileID: -5121704811935746486, guid: 5a3a7b47dd3ce0c4db4648db85624f9a, type: 3}
+  _selectInput: {fileID: 3337434310276552689, guid: 5a3a7b47dd3ce0c4db4648db85624f9a, type: 3}
+  _endInput: {fileID: 7968101296048834618, guid: 5a3a7b47dd3ce0c4db4648db85624f9a, type: 3}
+  _dungeonMap: {fileID: 0}
   _clanData: {fileID: 11400000, guid: f7bd74917eabb524d9b205094a38da22, type: 2}
-  _monster: {fileID: 4983655692223104094, guid: 221baedd294351d41b02eb3fe835315f, type: 3}
-  _currentRemainMonster: 0
   _deckManager: {fileID: 0}
 --- !u!114 &8042749800870342805
 MonoBehaviour:

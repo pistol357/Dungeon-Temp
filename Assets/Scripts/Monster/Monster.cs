@@ -10,7 +10,7 @@ public class Monster
     private State _state;
 
     public string Name => _name;
-    public Room CurrentRoom => _currentRoom;
+    public int CurrentRoomNumber => _currentRoom.RoomNumber;
 
     public void Move()
     {
@@ -40,6 +40,11 @@ public class Monster
     public void SetRoom(Room room)
     {
         _currentRoom = room;
+    }
+
+    public void RemoveRoom(Room room)
+    {
+        _currentRoom = null;
     }
 
     public void Create(ActionType resource)

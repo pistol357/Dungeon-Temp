@@ -32,4 +32,15 @@ public class Room
     {
         _monsters.Add(monster);
     }
+
+    public void RemoveMonster(Monster monster)
+    {
+        if (_monsters.Contains(monster))
+        {
+            _monsters.Remove(monster);
+            return;
+        }
+
+        Debug.Log($"{monster.Name}(이)가 {_name}에 존재하지 않음");
+    }
 }

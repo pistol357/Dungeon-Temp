@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: DragonCard1
   m_EditorClassIdentifier: Assembly-CSharp::MonsterCard
   _id: 1
-  _actionList1: 0b000000
-  _actionList2: 0100000001000000
+  _actionList1: 0c000000
+  _actionList2: 0200000002000000
