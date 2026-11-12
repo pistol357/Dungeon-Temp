@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class DeckManager : MonoBehaviour
@@ -10,15 +9,7 @@ public class DeckManager : MonoBehaviour
     [SerializeField] private List<PlayCard> _discard = new();
     [SerializeField] private PlayCardObject _playCardPrefab;
 
-    private PlayCard _selectedCard;
-    private List<ActionType> _selectedActionList;
-    private ActionType _selectedAction;
-
     public int HandCount => _hand.Count;
-    public PlayCard SelectedCard => _selectedCard;
-    public bool IsActionListSelected => _selectedActionList != null;
-    public int SelectedActionLIstCount => _selectedActionList.Count;
-    public ActionType SelectedAction => _selectedAction;
 
     private void OnEnable() => BindEndTurnEvent();
     private void OnDisable() => UnbindEndTurnEvent();
@@ -48,67 +39,49 @@ public class DeckManager : MonoBehaviour
         }
     }
 
-    public void SelectCard(PlayCard card)
+    public PlayCard GetCard(int num)
     {
         if (_hand.Count <= 0)
         {
             Debug.Log($"손 패 부족");
-            return;
-        }
-
-        if (_hand.Contains(card) && card.CardState == CardState.Hand)
-        {
-            card.SetCardState(CardState.Open);
-            _hand.Remove(card);
-            _open.Add(card);
-            _selectedCard = card;
-            
-            Debug.Log($"{card} 선택됨");
-            Debug.Log($"덱 : {_deck.Count} / 손 : {_hand.Count} / 공개 : {_open.Count} / 버림 : {_discard.Count}");
-        }
-        else
-        {
-            Debug.Log($"{card} 사용 불가");
-        }
-    }
-
-    public void SelectCard(int num)
-    {
-        if (_hand.Count <= 0)
-        {
-            Debug.Log($"손 패 부족");
-            return;
+            return null;
         }
 
         if (num < 0 || _hand.Count <= num)
         {
             Debug.Log($"해당 카드 없음(인덱스 범위 벗어남)");
-            return;
+            return null;
         }
 
-        SelectCard(_hand[num]);
+        return _hand[num];
     }
 
-    public void SelectActionList(int num)
+    public PlayCard SelectCard(int num)
     {
-        if(_selectedCard.CardActionCount == 0)
+        PlayCard card = GetCard(num);
+        
+        if(card != null)
         {
-            Debug.Log($"카드 데이터 이상");
-            return;
+            _hand.Remove(card);
+            _open.Add(card);
+
+            Debug.Log($"{card.PrintCardInfo()} 선택됨");
+            Debug.Log($"덱 : {_deck.Count} / 손 : {_hand.Count} / 공개 : {_open.Count} / 버림 : {_discard.Count}");
         }
 
-        _selectedActionList = _selectedCard.GetActionList(num).ToList();
+        return card;
     }
 
-    public void SelectAction(int num)
+    public void UnselectCard(PlayCard card)
     {
-        _selectedAction = _selectedActionList[num];
-    }
+        if (_open[_open.Count - 1] == card)
+        {
+            _open.Remove(card);
+            _hand.Add(card);
 
-    public void EndAction()
-    {
-        _selectedActionList.Remove(_selectedAction);
-        _selectedAction = ActionType.None;
+            Debug.Log($"{card.PrintCardInfo()} 선택 취소");
+            Debug.Log($"덱 : {_deck.Count} / 손 : {_hand.Count} / 공개 : {_open.Count} / 버림 : {_discard.Count}");
+        }
     }
 
     public void EndMonsterActionState()

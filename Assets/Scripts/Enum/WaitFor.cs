@@ -5,7 +5,9 @@ public enum WaitFor
     SelectActionList,
     SelectAction,
     SelectMonster,
-    SelectTargetRoom,
-    SelectTargetResource,
+    SelectMoveRoom,
+    SelectSummonRoom,
+    SelectMoveResource,
+    SelectCreateResource,
     SelectTargetHero
 }

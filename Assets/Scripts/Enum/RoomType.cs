@@ -1,5 +1,6 @@
 public enum RoomType
 {
+    None,
     Sword,
     Eye,
     Skull,

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3b5a37b893c8014fafda63d5c4b8c98, type: 3}
   m_Name: Room4Data
   m_EditorClassIdentifier: Assembly-CSharp::RoomData
-  _roomType: 0
+  _roomType: 1
   _name: "\uB300\uC7A5\uAC04"
   _activate: 2
   _resourceType: 1

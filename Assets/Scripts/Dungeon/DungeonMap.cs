@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class DungeonMap : MonoBehaviour
@@ -7,11 +8,25 @@ public class DungeonMap : MonoBehaviour
     [SerializeField] private List<Room> _rooms;
     [SerializeField] private List<int>[] _connections;
 
+    private static DungeonMap _instance;
     private List<int> _visited;
     private Dictionary<int, int> _distances;
 
+    public static DungeonMap Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = FindFirstObjectByType<DungeonMap>();
+            }
+
+            return _instance;
+        }
+    }
     public List<Room> Rooms => _rooms;
 
+    private void Awake() => SetSingleton();
     private void Start() => Init();
 
     private void AddConnection(int a, int b)
@@ -70,9 +85,58 @@ public class DungeonMap : MonoBehaviour
         return null;
     }
 
-    public List<int> GetConnectedRoomList(int number)
+    public RoomType GetRoomTypeByNumber(int number)
     {
+        Room room = GetRoomByNumber(number);
+
+        if (room == null) return RoomType.None;
+
+        return room.RoomType;
+    }
+
+    public List<int> GetRoomNumbersOfType(RoomType type)
+    {
+        List<int> rooms = new();
+
+        foreach(Room room in _rooms)
+        {
+            if(room.RoomType == type)
+            {
+                rooms.Add(room.RoomNumber);
+            }
+        }
+
+        if (rooms.Count == 0) return null;
+
+        return rooms;
+    }
+
+    public List<int> GetConnectedRoomNumberList(int number)
+    {
+        if (GetRoomByNumber(number) == null)
+        {
+            Debug.Log($"인덱스 범위 초과");
+            return null;
+        }
+
         return _connections[number];
+    }
+
+    public List<Resource> GetRoomResources(int number)
+    {
+        return GetRoomByNumber(number)?.Resources;
+    }
+
+    private void SetSingleton()
+    {
+        if (_instance != null && _instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            _instance = this;
+        }
     }
 
     private void Init()

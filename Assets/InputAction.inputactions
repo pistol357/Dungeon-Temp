@@ -25,6 +25,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Unselect",
+                    "type": "Button",
+                    "id": "2c31cbab-2b7d-4e01-8c30-c24036ac4963",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "End",
                     "type": "Button",
                     "id": "afa2f7ef-4da9-45d5-a8e3-89028b1def8f",
@@ -65,6 +74,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Select",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e06c775b-e11e-4d9c-9e49-a04681ebdc1f",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Unselect",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

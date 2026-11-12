@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [System.Serializable]
@@ -28,19 +29,19 @@ public class Room
         _roomType = data.RoomType;
     }
 
-    public void AddMonster(Monster monster)
+    public void AddUnit(IActionable unit)
     {
-        _monsters.Add(monster);
+        _monsters.Add((unit as Monster));
     }
 
-    public void RemoveMonster(Monster monster)
+    public void RemoveUnit(IActionable unit)
     {
-        if (_monsters.Contains(monster))
+        if (_monsters.Contains((unit as Monster)))
         {
-            _monsters.Remove(monster);
+            _monsters.Remove((unit as Monster));
             return;
         }
 
-        Debug.Log($"{monster.Name}(이)가 {_name}에 존재하지 않음");
+        Debug.Log($"{unit}(이)가 {_name}에 존재하지 않음");
     }
 }

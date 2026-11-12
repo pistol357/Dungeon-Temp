@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: RogueCard1
   m_EditorClassIdentifier: Assembly-CSharp::GuildCard
   _summonHero: 2
-  _summonRoom: 0
+  _summonRoom: 1
   _summonQuantity: 2

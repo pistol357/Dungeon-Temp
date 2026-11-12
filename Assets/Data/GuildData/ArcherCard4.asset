@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: ArcherCard4
   m_EditorClassIdentifier: Assembly-CSharp::GuildCard
   _summonHero: 1
-  _summonRoom: 3
+  _summonRoom: 4
   _summonQuantity: 2

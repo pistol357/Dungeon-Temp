@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3887007596859157901}
   - component: {fileID: 3615509641986550986}
   - component: {fileID: 8042749800870342805}
+  - component: {fileID: 664491091177540901}
   m_Layer: 0
   m_Name: DragonClan
   m_TagString: Untagged
@@ -47,10 +48,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DragonClan
   _nextInput: {fileID: -5121704811935746486, guid: 5a3a7b47dd3ce0c4db4648db85624f9a, type: 3}
   _selectInput: {fileID: 3337434310276552689, guid: 5a3a7b47dd3ce0c4db4648db85624f9a, type: 3}
+  _unselectInput: {fileID: 1357248829454193738, guid: 5a3a7b47dd3ce0c4db4648db85624f9a, type: 3}
   _endInput: {fileID: 7968101296048834618, guid: 5a3a7b47dd3ce0c4db4648db85624f9a, type: 3}
-  _dungeonMap: {fileID: 0}
   _clanData: {fileID: 11400000, guid: f7bd74917eabb524d9b205094a38da22, type: 2}
   _deckManager: {fileID: 0}
+  _actionManager: {fileID: 0}
 --- !u!114 &8042749800870342805
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -64,3 +66,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DeckManager
   _playCardPrefab: {fileID: 0}
+--- !u!114 &664491091177540901
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6820915541205343671}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 648b9902a036366498bf38e496ada8ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ActionManager

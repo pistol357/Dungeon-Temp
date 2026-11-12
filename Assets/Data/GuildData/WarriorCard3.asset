@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: WarriorCard3
   m_EditorClassIdentifier: Assembly-CSharp::GuildCard
   _summonHero: 0
-  _summonRoom: 2
+  _summonRoom: 3
   _summonQuantity: 2
