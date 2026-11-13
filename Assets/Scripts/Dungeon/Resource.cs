@@ -1,16 +1,11 @@
-using UnityEngine;
-
-public class Resource : MonoBehaviour
+public class Resource
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    private ResourceType _type;
 
-    // Update is called once per frame
-    void Update()
+    public ResourceType Type => _type;
+
+    public Resource(ResourceType type)
     {
-        
+        _type = type;
     }
 }

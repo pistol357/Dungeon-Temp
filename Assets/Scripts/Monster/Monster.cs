@@ -7,10 +7,16 @@ public class Monster : IActionable
     private string _name;
     private int _hp;
     private Room _currentRoom;
-    private State _state;
 
     public string Name => _name;
     public int CurrentRoomNumber => _currentRoom.RoomNumber;
+
+    public Monster(MonsterData data)
+    {
+        _data = data;
+        _name = data.name;
+        _hp = data.MaxHp;
+    }
 
     public void SetRoom(Room room)
     {
@@ -20,12 +26,5 @@ public class Monster : IActionable
     public void RemoveRoom(Room room)
     {
         _currentRoom = null;
-    }
-
-    public void SetData(MonsterData data)
-    {
-        _data = data;
-        _name = data.name;
-        _hp = data.MaxHp;
     }
 }

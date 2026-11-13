@@ -5,6 +5,7 @@ using UnityEngine;
 public class TurnManager : MonoBehaviour
 {
     [SerializeField] private List<Clan> _clans;
+    [SerializeField] private Guild _guild;
 
     private static TurnManager _instance;
     private int _currentRound;
@@ -32,6 +33,7 @@ public class TurnManager : MonoBehaviour
     public int CurrentRound => _currentRound;
     public int CurrentTurnIndex => _currentTurnIndex;
     public Clan CurrentTurnClan => _currentTurnClan;
+    public Guild Guild => _guild;
 
     private void Awake()
     {

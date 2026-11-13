@@ -7,9 +7,8 @@ public class MonsterPlayCard : PlayCard
 
     public MonsterCardData MonsterCardData => _monsterCardData;
 
-    public MonsterPlayCard(CardState state, MonsterCardData data)
+    public MonsterPlayCard(MonsterCardData data)
     {
-        _cardState = state;
         _monsterCardData = data;
         _cardAction?.Add(data.ActionList1);
         _cardAction?.Add(data.ActionList2);

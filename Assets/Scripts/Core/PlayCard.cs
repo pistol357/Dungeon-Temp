@@ -3,20 +3,12 @@ using UnityEngine;
 
 public abstract class PlayCard
 {
-    [SerializeField] protected CardState _cardState;
-
     protected List<List<ActionType>> _cardAction = new();
 
-    public CardState CardState => _cardState;
     public int CardActionCount => _cardAction.Count;
     public int GetActionListsCount => _cardAction.Count;
 
     public abstract List<ActionType> GetActionList(int num);
-
-    public void SetCardState(CardState state)
-    {
-        _cardState = state;
-    }
 
     public string PrintCardInfo()
     {

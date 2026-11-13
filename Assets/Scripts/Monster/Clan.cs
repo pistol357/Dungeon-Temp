@@ -11,7 +11,6 @@ public class Clan : MonoBehaviour
     [SerializeField] private InputActionReference _endInput;
     [SerializeField] private ClanData _clanData;
     [SerializeField] private DeckManager _deckManager;
-    [SerializeField] private ActionManager _actionManager;
 
     private Stack<Monster> _remainMonsters = new();
     private List<Monster> _activeMonsters = new();
@@ -39,7 +38,6 @@ public class Clan : MonoBehaviour
     private void CacheComponents()
     {
         _deckManager = GetComponent<DeckManager>();
-        _actionManager = GetComponent<ActionManager>();
     }
 
     private void Init()
@@ -49,8 +47,7 @@ public class Clan : MonoBehaviour
         for(int i = 0; i < max; i++)
         {
             MonsterData monsterData = _clanData.ClanMonster;
-            Monster monster = new Monster();
-            monster.SetData(monsterData);
+            Monster monster = new Monster(monsterData);
             _remainMonsters.Push(monster);
         }
 
@@ -61,7 +58,7 @@ public class Clan : MonoBehaviour
 
             for (int j = 0; j < times; j++)
             {
-                MonsterPlayCard card = new MonsterPlayCard(CardState.Discard, data);
+                MonsterPlayCard card = new MonsterPlayCard(data);
                 _deckManager.Discard(card);
             }
         }
@@ -166,8 +163,8 @@ public class Clan : MonoBehaviour
 
     private void NextSummonRoom()
     {
-        _currentIndex = (_currentIndex + 1) % DungeonMap.Instance.GetRoomNumbersOfType(_actionManager.ActionTypeToRoomType(_selectedAction, _selectedMonster)).Count;
-        int room = DungeonMap.Instance.GetRoomNumbersOfType(_actionManager.ActionTypeToRoomType(_selectedAction, _selectedMonster))[_currentIndex];
+        _currentIndex = (_currentIndex + 1) % DungeonMap.Instance.GetRoomNumbersOfType(ActionManager.Instance.ActionTypeToRoomType(_selectedAction, _selectedMonster)).Count;
+        int room = DungeonMap.Instance.GetRoomNumbersOfType(ActionManager.Instance.ActionTypeToRoomType(_selectedAction, _selectedMonster))[_currentIndex];
         Debug.Log($"소환 방 : {DungeonMap.Instance.GetRoomByNumber(room).Name} ");
     }
 
@@ -275,10 +272,9 @@ public class Clan : MonoBehaviour
         _currentIndex = 0;
 
         ActionType action = _selectedAction;
-
         if (action == ActionType.Draw)
         {
-            Action(action);
+            Action();
         }
         else if (ActionType.SummonInSword <= action && action <= ActionType.SummonInTreasure)
         {
@@ -319,7 +315,16 @@ public class Clan : MonoBehaviour
     {
         _selectedMonster = _activeMonsters[_currentIndex];
         Debug.Log($"현재 유닛 : {_selectedMonster} 선택됨");
-        ChangeState(WaitFor.SelectMoveRoom);
+
+        ActionType action = _selectedAction;
+        if (action == ActionType.Move)
+        {
+            ChangeState(WaitFor.SelectMoveRoom);
+        }
+        else if(ActionType.CreateCoin <= action && action <= ActionType.CreateTrap)
+        {
+            Action();
+        }
     }
 
     private void SelectTargetRoom()
@@ -331,9 +336,9 @@ public class Clan : MonoBehaviour
 
     private void SelectSummonRoom()
     {
-        _selectedTargetRoom = DungeonMap.Instance.GetRoomNumbersOfType(_actionManager.ActionTypeToRoomType(_selectedAction, _selectedMonster))[_currentIndex];
+        _selectedTargetRoom = DungeonMap.Instance.GetRoomNumbersOfType(ActionManager.Instance.ActionTypeToRoomType(_selectedAction, _selectedMonster))[_currentIndex];
         Debug.Log($"소환 방 : {DungeonMap.Instance.GetRoomByNumber(_selectedTargetRoom).Name} 선택됨");
-        Action(_selectedAction);
+        Action();
     }
 
     private void CheckRoom()
@@ -343,7 +348,7 @@ public class Clan : MonoBehaviour
         List<Resource> resources = DungeonMap.Instance.GetRoomResources(_selectedMonster.CurrentRoomNumber);
         if (resources.Count == 0)
         {
-            Action(_selectedAction);
+            Action();
         }
         else if(0 < resources.Count)
         {
@@ -354,6 +359,7 @@ public class Clan : MonoBehaviour
     private void SelectTargetResource()
     {
         _selectedTargetResource = DungeonMap.Instance.GetRoomResources(_selectedMonster.CurrentRoomNumber)[_currentIndex];
+        Action();
     }
 
     private void OnUnselect(InputAction.CallbackContext context)
@@ -440,7 +446,19 @@ public class Clan : MonoBehaviour
 
     private void OnEnd(InputAction.CallbackContext context)
     {
-        if (_state == WaitFor.SelectCard) EndMonsterActionState();
+        if (_state == WaitFor.None)
+        {
+            return;
+        }
+        else if (_state == WaitFor.SelectCard)
+        {
+            EndMonsterActionState();
+        }
+        else if (_state == WaitFor.SelectActionList)
+        {
+            _deckManager.Discard(_selectedCard);
+            EndCard();
+        }
     }
 
     private void EndMonsterActionState()
@@ -461,18 +479,27 @@ public class Clan : MonoBehaviour
     private void EndCard()
     {
         _selectedCard = null;
-        ChangeState(WaitFor.SelectCard);
+
+        if (TurnManager.Instance.CurrentRound == 0)
+        {
+            EndMonsterActionState();
+        }
+        else
+        {
+            ChangeState(WaitFor.SelectCard);
+        }
     }
 
-    public void Action(ActionType action)
+    public void Action()
     {
+        ActionType action = _selectedAction;
         if (action == ActionType.Draw)
         {
             _deckManager.DrawCard();
         }
         else if (action == ActionType.Move)
         {
-            _actionManager.Move(_selectedMonster, _selectedTargetRoom, _selectedTargetResource);
+            ActionManager.Instance.Move(_selectedMonster, _selectedTargetRoom, _selectedTargetResource);
         }
         else if (action == ActionType.Activate)
         {
@@ -500,13 +527,13 @@ public class Clan : MonoBehaviour
             {
                 Monster monster = _remainMonsters.Pop();
 
-                _actionManager.Summon(_selectedTargetRoom, monster);
+                ActionManager.Instance.Summon(_selectedTargetRoom, monster);
                 _activeMonsters.Add(monster);
             }
         }
         else if (ActionType.CreateCoin <= action && action <= ActionType.CreateTrap)
         {
-            // _monster.Create(action);
+            ActionManager.Instance.Create(_selectedMonster, action);
         }
 
         EndAction();
@@ -515,11 +542,11 @@ public class Clan : MonoBehaviour
     public void InitSummon()
     {
         RoomType initSummonRoom = _clanData.CanSummonRoom;
-        Monster monster = _remainMonsters.Pop();
 
-        _selectedAction = _actionManager.RoomTypeToActionType(initSummonRoom);
+        _selectedAction = ActionManager.Instance.RoomTypeToActionType(initSummonRoom);
         if (_selectedActionList == null) _selectedActionList = new();
         _selectedActionList.Add(_selectedAction);
+
         ChangeState(WaitFor.SelectSummonRoom);
     }
 }

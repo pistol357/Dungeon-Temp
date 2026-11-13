@@ -22,7 +22,6 @@ public class DeckManager : MonoBehaviour
             _deck.RemoveAt(0);
             _hand.Add(card);
 
-            card.SetCardState(CardState.Hand);
             Debug.Log($"{card} 뽑음");
             Debug.Log($"덱 : {_deck.Count} / 손 : {_hand.Count} / 공개 : {_open.Count} / 버림 : {_discard.Count}");
         }
@@ -88,7 +87,6 @@ public class DeckManager : MonoBehaviour
     {
         foreach (PlayCard card in _open)
         {
-            card.SetCardState(CardState.Discard);
             _discard.Add(card);
         }
 
@@ -102,9 +100,8 @@ public class DeckManager : MonoBehaviour
 
     public void Discard(PlayCard card)
     {
-        if (_hand.Contains(card)) _hand.Remove(card);
+        if (_open.Contains(card)) _open.Remove(card);
 
-        card.SetCardState(CardState.Discard);
         _discard.Add(card);
     }
 
@@ -116,7 +113,6 @@ public class DeckManager : MonoBehaviour
             PlayCard card = _discard[random];
             _discard.RemoveAt(random);
             _deck.Add(card);
-            card.SetCardState(CardState.Deck);
         }
 
         Debug.Log($"덱 : {_deck.Count} / 손 : {_hand.Count} / 공개 : {_open.Count} / 버림 : {_discard.Count}");
