@@ -6,10 +6,9 @@ public class Guild : MonoBehaviour
     [SerializeField] private GuildData _guildData;
 
     private Stack<Hero> _remainWarriors = new();
-    private Stack<Hero> _remainArcher = new();
-    private Stack<Hero> _remainRogue = new();
+    private Stack<Hero> _remainArchers = new();
+    private Stack<Hero> _remainRogues = new();
     private List<Hero> _activeHeroes = new();
-    private List<Hero> _exhaustedHeroes = new();
     private List<GuildCard> _guildDeck = new();
     private List<GuildCard> _guildOpen = new();
     private GuildState _state;
@@ -24,8 +23,43 @@ public class Guild : MonoBehaviour
     public void ChangeGuildState(GuildState state)
     {
         _state = state;
+        CheckHeroState();
 
         Debug.Log($"길드 : {state}");
+    }
+
+    private void CheckHeroState()
+    {
+        for(int i = 0; i < _activeHeroes.Count;)
+        {
+            if (_activeHeroes[i].State == UnitState.None)
+            {
+                Return(_activeHeroes[i]);
+                _activeHeroes.RemoveAt(i);
+            }
+            else
+            {
+                i++;
+            }
+        }
+    }
+
+    public void Return(Hero hero)
+    {
+        ActionManager.Instance.Return(hero);
+
+        if (hero.HeroType == HeroType.Warrior)
+        {
+            _remainWarriors.Push(hero);
+        }
+        else if (hero.HeroType == HeroType.Archer)
+        {
+            _remainArchers.Push(hero);
+        }
+        else if (hero.HeroType == HeroType.Rogue)
+        {
+            _remainRogues.Push(hero);
+        }
     }
 
     private void Progress()
@@ -49,6 +83,18 @@ public class Guild : MonoBehaviour
         else if (_state == GuildState.Enter)
         {
             Enter();
+        }
+        else if (_state == GuildState.Attack)
+        {
+            CheckAttack();
+        }
+        else if (_state == GuildState.Loot)
+        {
+            CheckTreasure();
+        }
+        else if (_state == GuildState.Move)
+        {
+            Move();
         }
         else if (_state == GuildState.End)
         {
@@ -96,15 +142,15 @@ public class Guild : MonoBehaviour
             IActionable hero = null;
             if (_summonHero == HeroType.Warrior)
             {
-                hero = _remainWarriors?.Pop();
+                if (_remainWarriors.Count > 0) hero = _remainWarriors.Pop();
             }
             else if (_summonHero == HeroType.Archer)
             {
-                hero = _remainArcher?.Pop();
+                if (_remainArchers.Count > 0) hero = _remainArchers.Pop();
             }
             else if (_summonHero == HeroType.Rogue)
             {
-                hero = _remainRogue?.Pop();
+                if (_remainRogues.Count > 0) hero = _remainRogues.Pop();
             }
 
             if (hero == null)
@@ -116,6 +162,7 @@ public class Guild : MonoBehaviour
             int room = _summonRooms[i];
             ActionManager.Instance.Summon(room, hero);
             _activeHeroes.Add(hero as Hero);
+            (hero as Hero).Cheer();
         }
 
         ChangeGuildState(GuildState.SummonAction);
@@ -130,31 +177,115 @@ public class Guild : MonoBehaviour
     {
         foreach(Hero hero in _activeHeroes)
         {
-            int roomNumber = hero.CurrentRoomNumber;
-            Room room = DungeonMap.Instance.GetRoomByNumber(roomNumber);
-
-            if (room.IsTrapExist())
+            if (hero.State == UnitState.Active)
             {
-                ActionManager.Instance.Return(roomNumber, hero);
-                Return(hero);
+                int roomNumber = hero.CurrentRoomNumber;
+                Room room = DungeonMap.Instance.GetRoomByNumber(roomNumber);
+
+                if (room.IsTrapExist())
+                {
+                    room.RemoveResource(ResourceType.Trap);
+                    hero.Damage(1);
+                }
+                else
+                {
+                    List<Hero> list = room.Heroes;
+                    
+                    if(list.Count > 0)
+                    {
+                        foreach (Hero h in list)
+                        {
+                            if (h.State == UnitState.Exhausted)
+                            {
+                                h.Cheer();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        ChangeGuildState(GuildState.Attack);
+    }
+
+    private void CheckAttack()
+    {
+        foreach (Hero hero in _activeHeroes)
+        {
+            if (hero.State == UnitState.Active)
+            {
+                int roomNumber = hero.CurrentRoomNumber;
+                Room room = DungeonMap.Instance.GetRoomByNumber(roomNumber);
+
+                if (room.Monsters.Count > 0)
+                {
+                    IActionable target = room.Monsters[0];
+                    ActionManager.Instance.Attack(target);
+                    hero.Exhaust();
+                }
+            }
+        }
+
+        ChangeGuildState(GuildState.Loot);
+    }
+
+    private void CheckTreasure()
+    {
+        foreach (Hero hero in _activeHeroes)
+        {
+            if (hero.State == UnitState.Active)
+            {
+                int roomNumber = hero.CurrentRoomNumber;
+                Room room = DungeonMap.Instance.GetRoomByNumber(roomNumber);
+
+                if (!room.Treasure.IsOpened)
+                {
+                    List<Hero> list = room.Heroes;
+
+                    if(list.Count >= room.Treasure.Value)
+                    {
+                        for(int i = 0; i < room.Treasure.Value; i++)
+                        {
+                            list[i].Exhaust();
+                        }
+
+                        room.Treasure.Open();
+                    }
+                    else
+                    {
+                        foreach(Hero h in room.Heroes)
+                        {
+                            h.Exhaust();
+                        }
+                    }
+                }
+            }
+        }
+
+        ChangeGuildState(GuildState.Move);
+    }
+
+    private void Move()
+    {
+        foreach(Hero hero in _activeHeroes)
+        {
+            if (hero.State == UnitState.Active)
+            {
+                int nextRoomNumber = DungeonMap.Instance.GetNextRoomNumber(hero.CurrentRoomNumber);
+                ActionManager.Instance.Move(hero, nextRoomNumber, null);
+            }
+        }
+
+        foreach(Hero hero in _activeHeroes)
+        {
+            if(hero.State == UnitState.Active)
+            {
+                ChangeGuildState(GuildState.Enter);
+                return;
             }
         }
 
         ChangeGuildState(GuildState.End);
-    }
-
-    private void Return(Hero hero)
-    {
-        if (_activeHeroes.Contains(hero))
-        {
-            _activeHeroes.Remove(hero);
-        }
-        else if (_exhaustedHeroes.Contains(hero))
-        {
-            _exhaustedHeroes.Remove(hero);
-        }
-
-        // todo 종류에 따라 remain으로 넣어주기
     }
 
     private void EndHeroInvasionState()
@@ -174,15 +305,15 @@ public class Guild : MonoBehaviour
                 HeroType heroType = heroData.HeroType;
                 if(heroType == HeroType.Warrior)
                 {
-                    _remainWarriors.Push(new Hero(heroData));
+                    _remainWarriors.Push(new Hero(heroData, this));
                 }
                 else if(heroType == HeroType.Archer)
                 {
-                    _remainArcher.Push(new Hero(heroData));
+                    _remainArchers.Push(new Hero(heroData, this));
                 }
                 else if(heroType == HeroType.Rogue)
                 {
-                    _remainRogue.Push(new Hero(heroData));
+                    _remainRogues.Push(new Hero(heroData, this));
                 }
             }
         }

@@ -5,10 +5,12 @@ public class Monster : IActionable
     [SerializeField] private MonsterData _data;
 
     private string _name;
+    private UnitState _state;
     private int _hp;
     private Room _currentRoom;
 
     public string Name => _name;
+    public UnitState State => _state;
     public int CurrentRoomNumber => _currentRoom.RoomNumber;
 
     public Monster(MonsterData data)
@@ -23,8 +25,20 @@ public class Monster : IActionable
         _currentRoom = room;
     }
 
-    public void RemoveRoom(Room room)
+    public void Damage(int damage)
     {
-        _currentRoom = null;
+        _hp -= damage;
+
+        if (_hp <= 0)
+        {
+            Return();
+            _hp = _data.MaxHp;
+        }
+    }
+
+    public void Return()
+    {
+        _state = UnitState.None;
+        ActionManager.Instance.Return(this);
     }
 }

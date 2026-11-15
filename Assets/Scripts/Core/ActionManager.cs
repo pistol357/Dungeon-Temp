@@ -125,12 +125,15 @@ public class ActionManager : MonoBehaviour
         Debug.Log($"{unit}(이)가 {room.Name}에 매복함");
     }
 
-    public void Return(int roomNumber, IActionable unit)
+    public void Return(IActionable unit)
     {
+        int roomNumber = unit.CurrentRoomNumber;
         Room room = DungeonMap.Instance.GetRoomByNumber(roomNumber);
 
         room.RemoveUnit(unit);
         unit.SetRoom(null);
+
+        Debug.Log($"{unit} 복귀");
     }
 
     public void Move(IActionable unit, int roomNumber, Resource resource)
@@ -142,7 +145,7 @@ public class ActionManager : MonoBehaviour
         currentRoom.RemoveUnit(unit);
         currentRoom.RemoveResource(resource);
         nextRoom.AddUnit(unit);
-        nextRoom.RemoveResource(resource);
+        nextRoom.AddResource(resource);
         unit.SetRoom(nextRoom);
 
         if (resource == null) Debug.Log($"{unit}(이)가 {currentRoom.Name}에서 {nextRoom.Name}(으)로 이동함");
@@ -159,6 +162,13 @@ public class ActionManager : MonoBehaviour
         room.AddResource(resource);
 
         Debug.Log($"{resource.Type}을 {room.Name}에 생산함");
+    }
+
+    public void Attack(IActionable unit)
+    {
+        unit.Damage(1);
+
+        Debug.Log($"{unit} 공격 받음");
     }
 
     private void SetSingleton()

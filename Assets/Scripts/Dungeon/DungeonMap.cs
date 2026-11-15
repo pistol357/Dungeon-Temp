@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 
 public class DungeonMap : MonoBehaviour
@@ -153,7 +154,9 @@ public class DungeonMap : MonoBehaviour
         for(int i = 0; i < _scenarioData.Rooms.Count; i++)
         {
             RoomData data = _scenarioData.Rooms[i];
-            Room room = new Room(data, i);
+            int treasureIndex = _scenarioData.RoomToTreasure[i].y;
+            TreasureData treasureData = _scenarioData.Treasures[treasureIndex];
+            Room room = new Room(data, i, treasureData);
             _rooms.Add(room);
         }
 

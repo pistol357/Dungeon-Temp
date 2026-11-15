@@ -5,7 +5,6 @@ public enum GuildState
     Summon,
     SummonAction,
     Enter,
-    Cheer,
     Attack,
     Loot,
     Move,
