@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: Warrior
   m_EditorClassIdentifier: Assembly-CSharp::Hero
   _heroType: 0
+  _icon: {fileID: 21300000, guid: 94fdb7546a8a46c4ca40f029730c565a, type: 3}
   _maxHp: 1
   _ability: 

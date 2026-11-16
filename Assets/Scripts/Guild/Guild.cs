@@ -155,8 +155,17 @@ public class Guild : MonoBehaviour
 
             if (hero == null)
             {
-                Debug.Log($"소환 가능한 영웅 없음");
-                return;
+                Debug.Log($"소환 가능한 영웅 없음. 해당 영웅 모두 활성화");
+
+                foreach(Hero h in _activeHeroes)
+                {
+                    if(_summonHero == h.HeroType && h.State == UnitState.Exhausted)
+                    {
+                        h.Cheer();
+                    }
+                }
+
+                ChangeGuildState(GuildState.SummonAction);
             }
 
             int room = _summonRooms[i];

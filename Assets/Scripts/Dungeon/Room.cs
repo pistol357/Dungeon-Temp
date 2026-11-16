@@ -61,6 +61,7 @@ public class Room
 
     public void AddResource(Resource resource)
     {
+        if (resource == null) return;
         _resources.Add(resource);
     }
 
@@ -87,6 +88,8 @@ public class Room
 
     public bool IsTrapExist()
     {
+        if (_resources == null || _resources.Count == 0) return false;
+
         foreach(Resource resource in _resources)
         {
             if (resource.Type == ResourceType.Trap) return true;

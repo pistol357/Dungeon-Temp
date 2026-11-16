@@ -51,6 +51,7 @@ MonoBehaviour:
   _endInput: {fileID: 7968101296048834618, guid: 5a3a7b47dd3ce0c4db4648db85624f9a, type: 3}
   _clanData: {fileID: 11400000, guid: f7bd74917eabb524d9b205094a38da22, type: 2}
   _deckManager: {fileID: 0}
+  _monsterPrefab: {fileID: 5626008537563915137, guid: 82cce04b685f6184c943c6414f8fdb35, type: 3}
 --- !u!114 &8042749800870342805
 MonoBehaviour:
   m_ObjectHideFlags: 0

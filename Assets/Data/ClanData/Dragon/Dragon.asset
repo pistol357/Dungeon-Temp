@@ -12,4 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a2b56f9424d60746b2d71d83d81bab6, type: 3}
   m_Name: Dragon
   m_EditorClassIdentifier: Assembly-CSharp::Monster
+  _icon: {fileID: 21300000, guid: a670695fe176ec946b1149e298650607, type: 3}
   _maxHp: 5

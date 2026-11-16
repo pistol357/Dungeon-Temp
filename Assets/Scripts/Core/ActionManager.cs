@@ -143,9 +143,9 @@ public class ActionManager : MonoBehaviour
         Room nextRoom = DungeonMap.Instance.GetRoomByNumber(roomNumber);
 
         currentRoom.RemoveUnit(unit);
-        currentRoom.RemoveResource(resource);
+        if (resource != null) currentRoom.RemoveResource(resource);
         nextRoom.AddUnit(unit);
-        nextRoom.AddResource(resource);
+        if (resource != null) nextRoom.AddResource(resource);
         unit.SetRoom(nextRoom);
 
         if (resource == null) Debug.Log($"{unit}(이)가 {currentRoom.Name}에서 {nextRoom.Name}(으)로 이동함");

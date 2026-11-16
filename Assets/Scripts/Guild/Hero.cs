@@ -12,6 +12,7 @@ public class Hero : IActionable
     private Room _currentRoom;
 
     public HeroType HeroType => _heroType;
+    public Sprite Icon => _data.Icon;
     public string Name => _name;
     public UnitState State => _state;
     public int CurrentRoomNumber => _currentRoom.RoomNumber;

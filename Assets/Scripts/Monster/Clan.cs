@@ -11,6 +11,7 @@ public class Clan : MonoBehaviour
     [SerializeField] private InputActionReference _endInput;
     [SerializeField] private ClanData _clanData;
     [SerializeField] private DeckManager _deckManager;
+    [SerializeField] private GameObject _monsterPrefab;
 
     private Stack<Monster> _remainMonsters = new();
     private List<Monster> _activeMonsters = new();
