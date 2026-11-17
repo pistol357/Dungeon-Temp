@@ -128,6 +128,16 @@ public class DungeonMap : MonoBehaviour
         return GetRoomByNumber(number)?.Resources;
     }
 
+    public bool IsTreasureRoomPlundered()
+    {
+        foreach(Room room in _rooms)
+        {
+            if (room.RoomType == RoomType.Treasure && room.Treasure.IsOpened) return true;
+        }
+
+        return false;
+    }
+
     private void SetSingleton()
     {
         if (_instance != null && _instance != this)

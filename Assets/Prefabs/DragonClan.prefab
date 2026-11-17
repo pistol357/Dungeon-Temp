@@ -45,6 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4d6af290c35bd448a938f504a16968a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DragonClan
+  _prevInput: {fileID: 4850980703255641566, guid: 5a3a7b47dd3ce0c4db4648db85624f9a, type: 3}
   _nextInput: {fileID: -5121704811935746486, guid: 5a3a7b47dd3ce0c4db4648db85624f9a, type: 3}
   _selectInput: {fileID: 3337434310276552689, guid: 5a3a7b47dd3ce0c4db4648db85624f9a, type: 3}
   _unselectInput: {fileID: 1357248829454193738, guid: 5a3a7b47dd3ce0c4db4648db85624f9a, type: 3}
@@ -64,4 +65,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc55bc525cc62ce4f8ddc32a4b3f014d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DeckManager
-  _playCardPrefab: {fileID: 0}

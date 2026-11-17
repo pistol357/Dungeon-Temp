@@ -7,19 +7,26 @@ public class TreasureSlot : MonoBehaviour
     [SerializeField] private Image _valueImage;
     [SerializeField] private List<Sprite> _valueImages;
 
-    public void SetValue(int value)
-    {
-        _valueImage.sprite = _valueImages[value];
+    private RoomView _roomView;
 
-        if (value > 0)
+    private void Awake() => CacheComponents();
+    private void Update() => RefreshUI();
+
+    private void RefreshUI()
+    {
+        Room room = _roomView.GetRoom();
+
+        if (room.Treasure.IsOpened)
         {
-            gameObject.SetActive(true);
+            gameObject.SetActive(false);
+            return;
         }
+
+        _valueImage.sprite = _valueImages[room.Treasure.Value];
     }
 
-    public void Open()
+    private void CacheComponents()
     {
-        SetValue(0);
-        gameObject.SetActive(false);
+        _roomView = GetComponentInParent<RoomView>();
     }
 }

@@ -33,7 +33,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -75, y: -30}
+  m_AnchoredPosition: {x: -75, y: 30}
   m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &7249289263068609897
@@ -170,7 +170,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -75, y: 30}
+  m_AnchoredPosition: {x: -75, y: -30}
   m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &5181719219897663736
@@ -245,7 +245,7 @@ GameObject:
   - component: {fileID: 8674475065379508920}
   - component: {fileID: 2186954941925964808}
   m_Layer: 5
-  m_Name: WorkShop
+  m_Name: Workshop
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -264,10 +264,10 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6485205745136356215}
-  - {fileID: 8874410713316131731}
-  - {fileID: 5447917508491212964}
-  - {fileID: 5608948611681776393}
   - {fileID: 2735949701705240737}
+  - {fileID: 5608948611681776393}
+  - {fileID: 5447917508491212964}
+  - {fileID: 8874410713316131731}
   - {fileID: 2980136567331609067}
   - {fileID: 7064303383672552471}
   - {fileID: 4779602919170646641}

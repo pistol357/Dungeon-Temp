@@ -28,7 +28,7 @@ public class Guild : MonoBehaviour
         Debug.Log($"길드 : {state}");
     }
 
-    private void CheckHeroState()
+    public void CheckHeroState()
     {
         for(int i = 0; i < _activeHeroes.Count;)
         {
@@ -166,6 +166,7 @@ public class Guild : MonoBehaviour
                 }
 
                 ChangeGuildState(GuildState.SummonAction);
+                return;
             }
 
             int room = _summonRooms[i];
@@ -250,8 +251,14 @@ public class Guild : MonoBehaviour
                 if (!room.Treasure.IsOpened)
                 {
                     List<Hero> list = room.Heroes;
+                    int count = 0;
 
-                    if(list.Count >= room.Treasure.Value)
+                    foreach(Hero h in list)
+                    {
+                        if (h.State == UnitState.Active) count++;
+                    }
+
+                    if(count >= room.Treasure.Value)
                     {
                         for(int i = 0; i < room.Treasure.Value; i++)
                         {
@@ -259,6 +266,11 @@ public class Guild : MonoBehaviour
                         }
 
                         room.Treasure.Open();
+                        if (DungeonMap.Instance.IsTreasureRoomPlundered())
+                        {
+                            TurnManager.Instance.StateMachine.ChangeState(TurnManager.Instance.GameOverState);
+                            return;
+                        }
                     }
                     else
                     {
@@ -299,6 +311,12 @@ public class Guild : MonoBehaviour
 
     private void EndHeroInvasionState()
     {
+        if (_wave == 2 && _guildDeck.Count == 0 && !DungeonMap.Instance.IsTreasureRoomPlundered())
+        {
+            TurnManager.Instance.StateMachine.ChangeState(TurnManager.Instance.GameClearState);
+            return;
+        }
+
         TurnManager.Instance.StateMachine.ChangeState(TurnManager.Instance.EndTurnState);
     }
 

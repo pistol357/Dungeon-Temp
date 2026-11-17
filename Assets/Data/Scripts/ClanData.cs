@@ -10,7 +10,7 @@ public class ClanData : ScriptableObject
     [SerializeField] private int _maxSummon;
     [SerializeField] private int _initialSummon;
     [SerializeField] private RoomType _canSummonRoom;
-    [SerializeField] private List<MonsterCardData> _monsterCardList;
+    [SerializeField] private List<PlayCardData> _monsterCardList;
     [SerializeField] private List<int> _monsterCardQuantity;
 
     public string Name => _name;
@@ -19,6 +19,6 @@ public class ClanData : ScriptableObject
     public int MaxSummon => _maxSummon;
     public int InitialSummon => _initialSummon;
     public RoomType CanSummonRoom => _canSummonRoom;
-    public List<MonsterCardData> MonsterCardList => _monsterCardList;
+    public List<PlayCardData> MonsterCardList => _monsterCardList;
     public List<int> MonsterCardQuantity => _monsterCardQuantity;
 }

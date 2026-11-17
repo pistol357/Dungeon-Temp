@@ -12,7 +12,7 @@ public class RoomView : MonoBehaviour
 
     private void RefreshUI()
     {
-        Room room = DungeonMap.Instance.GetRoomByNumber(_roomNumber);
+        Room room = GetRoom();
 
         foreach(Transform child in _monsterPosition)
         {
@@ -39,5 +39,12 @@ public class RoomView : MonoBehaviour
                 heroImage.color = Color.grey;
             }
         }
+    }
+
+    public Room GetRoom()
+    {
+        Room room = DungeonMap.Instance.GetRoomByNumber(_roomNumber);
+
+        return room;
     }
 }

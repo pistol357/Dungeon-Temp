@@ -7,6 +7,15 @@
             "id": "4bdbdee2-c6d2-4699-85e2-ad03dd5c6a8b",
             "actions": [
                 {
+                    "name": "Prev",
+                    "type": "Button",
+                    "id": "0f9e8701-8e08-44ad-83d8-3cf90254fef7",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Next",
                     "type": "Button",
                     "id": "2b4ce385-9ec8-4424-a85f-bcf86187ac12",
@@ -68,6 +77,17 @@
                 },
                 {
                     "name": "",
+                    "id": "62c36392-1086-4be6-bb81-f4233b6ee00b",
+                    "path": "<Keyboard>/rightArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Next",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "8efe9aad-c408-4945-bf44-cd097cbae933",
                     "path": "<Keyboard>/space",
                     "interactions": "",
@@ -85,6 +105,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "Unselect",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2838debc-03d9-4f1b-886d-199f565095b3",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Prev",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "541b70d4-1652-4907-88ab-a4d927ba3003",
+                    "path": "<Keyboard>/leftArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Prev",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

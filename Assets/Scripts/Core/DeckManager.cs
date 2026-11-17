@@ -7,8 +7,8 @@ public class DeckManager : MonoBehaviour
     [SerializeField] private List<PlayCard> _hand = new();
     [SerializeField] private List<PlayCard> _open = new();
     [SerializeField] private List<PlayCard> _discard = new();
-    [SerializeField] private PlayCardObject _playCardPrefab;
 
+    public List<PlayCard> Hand => _hand;
     public int HandCount => _hand.Count;
 
     private void OnEnable() => BindEndTurnEvent();

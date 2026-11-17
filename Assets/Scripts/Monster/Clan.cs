@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 
 public class Clan : MonoBehaviour
 {
+    [SerializeField] private InputActionReference _prevInput;
     [SerializeField] private InputActionReference _nextInput;
     [SerializeField] private InputActionReference _selectInput;
     [SerializeField] private InputActionReference _unselectInput;
@@ -15,172 +16,201 @@ public class Clan : MonoBehaviour
 
     private Stack<Monster> _remainMonsters = new();
     private List<Monster> _activeMonsters = new();
+    private List<PlayCard> _canSelectCards = new();
     private PlayCard _selectedCard;
+    private List<List<ActionType>> _canSelectActionLists = new();
     private List<ActionType> _selectedActionList;
+    private List<ActionType> _canSelectActions = new();
     private ActionType _selectedAction;
+    private List<Monster> _canSelectMonsters = new();
     private Monster _selectedMonster;
+    private List<Hero> _canSelectHeroes = new();
+    private Hero _selectedTargetHero;
+    private List<int> _canSelectRooms = new();
     private int _selectedTargetRoom = -1;
+    private List<Resource> _canSelectResources = new();
     private Resource _selectedTargetResource;
     private WaitFor _state;
+    private int _canSelectCount;
     private int _currentIndex;
+
+    public DeckManager DeckManager => _deckManager;
+    public int CurrentIndex => _currentIndex;
 
     private void Awake() => CacheComponents();
     private void OnEnable() => BindInputAction();
     private void Start() => Init();
     private void OnDisable() => UnbindInputAction();
 
+    public void InitSummon()
+    {
+        RoomType initSummonRoom = _clanData.CanSummonRoom;
+
+        _selectedAction = ActionManager.Instance.RoomTypeToActionType(initSummonRoom);
+        if (_selectedActionList == null) _selectedActionList = new();
+        _selectedActionList.Add(_selectedAction);
+
+        ChangeState(WaitFor.SelectSummonRoom);
+    }
+
+    public void Action()
+    {
+        ActionType action = _selectedAction;
+        if (action == ActionType.Draw)
+        {
+            _deckManager.DrawCard();
+        }
+        else if (action == ActionType.Move)
+        {
+            ActionManager.Instance.Move(_selectedMonster, _selectedTargetRoom, _selectedTargetResource);
+        }
+        else if (action == ActionType.Activate)
+        {
+            // Activate();
+        }
+        else if (action == ActionType.SRAttack || action == ActionType.LRAttack)
+        {
+            ActionManager.Instance.Attack(_selectedTargetHero);
+        }
+        else if (action == ActionType.Defense)
+        {
+            // Defense();
+        }
+        else if (ActionType.SummonInSameRoom <= action && action <= ActionType.SummonInJail)
+        {
+            if (_remainMonsters.Count < 1)
+            {
+                Debug.Log($"소환 불가(남은 몬스터 없음)");
+            }
+            else
+            {
+                Monster monster = _remainMonsters.Pop();
+
+                ActionManager.Instance.Summon(_selectedTargetRoom, monster);
+                _activeMonsters.Add(monster);
+            }
+        }
+        else if (ActionType.CreateCoin <= action && action <= ActionType.CreateTrap)
+        {
+            ActionManager.Instance.Create(_selectedMonster, action);
+        }
+
+        EndAction();
+    }
+
     public void ChangeState(WaitFor state)
     {
         _currentIndex = 0;
         _state = state;
+
         Debug.Log($"{_state}");
-    }
 
-    private void CacheComponents()
-    {
-        _deckManager = GetComponent<DeckManager>();
-    }
-
-    private void Init()
-    {
-        int max = _clanData.MaxSummon;
-
-        for(int i = 0; i < max; i++)
+        if (_state == WaitFor.SelectCard)
         {
-            MonsterData monsterData = _clanData.ClanMonster;
-            Monster monster = new Monster(monsterData);
-            _remainMonsters.Push(monster);
-        }
-
-        for (int i = 0; i < _clanData.MonsterCardList.Count; i++)
-        {
-            MonsterCardData data = _clanData.MonsterCardList[i];
-            int times = _clanData.MonsterCardQuantity[i];
-
-            for (int j = 0; j < times; j++)
-            {
-                MonsterPlayCard card = new MonsterPlayCard(data);
-                _deckManager.Discard(card);
-            }
-        }
-
-        _deckManager.Shuffle();
-    }
-
-    private void BindInputAction()
-    {
-        _nextInput.action.Enable();
-        _selectInput.action.Enable();
-        _unselectInput.action.Enable();
-        _endInput.action.Enable();
-        _nextInput.action.performed += OnNext;
-        _selectInput.action.performed += OnSelect;
-        _unselectInput.action.performed += OnUnselect;
-        _endInput.action.performed += OnEnd;
-    }
-
-    private void UnbindInputAction()
-    {
-        _nextInput.action.Disable();
-        _selectInput.action.Disable();
-        _unselectInput.action.Disable();
-        _endInput.action.Disable();
-        _nextInput.action.performed -= OnNext;
-        _selectInput.action.performed -= OnSelect;
-        _unselectInput.action.performed -= OnUnselect;
-        _endInput.action.performed -= OnEnd;
-    }
-
-    private void OnNext(InputAction.CallbackContext context)
-    {
-        if (_state == WaitFor.None)
-        {
-            return;
-        }
-        else if(_state == WaitFor.SelectCard)
-        {
-            NextCard();
+            _canSelectCards = _deckManager.Hand.ToList();
+            _canSelectCount = _canSelectCards.Count;
         }
         else if (_state == WaitFor.SelectActionList)
         {
-            NextActionList();
+            _canSelectActionLists.Clear();
+
+            for(int i = 0; i < _selectedCard.CardActionCount; i++)
+            {
+                _canSelectActionLists.Add(_selectedCard.GetActionList(i).ToList());
+            }
+            _canSelectCount = _canSelectActionLists.Count;
+
+            if (_canSelectCount == 1)
+            {
+                SelectActionList();
+                return;
+            }
         }
-        else if(_state == WaitFor.SelectAction)
+        else if (_state == WaitFor.SelectAction)
         {
-            NextAction();
+            _canSelectActions = _selectedActionList.ToList();
+            _canSelectCount = _canSelectActions.Count;
+
+            if (_canSelectCount == 0)
+            {
+                if (TurnManager.Instance.CurrentRound == 0)
+                {
+                    EndMonsterActionState();
+                }
+                else
+                {
+                    EndCard();
+                }
+            }
         }
-        else if(_state == WaitFor.SelectMonster)
+        else if (_state == WaitFor.SelectMonster)
         {
-            NextMonster();
+            _canSelectMonsters = _activeMonsters.ToList();
+            _canSelectCount = _canSelectMonsters.Count;
+
+            if (_canSelectCount == 0)
+            {
+                Debug.Log($"선택 가능한 몬스터 없음");
+                UnselectAction();
+                return;
+            }
         }
-        else if(_state == WaitFor.SelectMoveRoom)
+        else if (_state == WaitFor.SelectTargetHero)
         {
-            NextRoom();
+            if (_selectedAction == ActionType.SRAttack)
+            {
+                _canSelectHeroes = DungeonMap.Instance.GetRoomByNumber(_selectedMonster.CurrentRoomNumber).Heroes.ToList();
+            }
+            else if (_selectedAction == ActionType.LRAttack)
+            {
+                _canSelectHeroes.Clear();
+
+                List<int> connectedRoomNumbers = DungeonMap.Instance.GetConnectedRoomNumberList(_selectedMonster.CurrentRoomNumber);
+                for(int i = 0; i < connectedRoomNumbers.Count; i++)
+                {
+                    List<Hero> heroes = DungeonMap.Instance.GetRoomByNumber(connectedRoomNumbers[i]).Heroes.ToList();
+                    foreach(Hero hero in heroes)
+                    {
+                        _canSelectHeroes.Add(hero);
+                    }
+                }
+            }
+            _canSelectCount = _canSelectHeroes.Count;
+
+            if (_canSelectCount == 0)
+            {
+                Debug.Log($"선택 가능한 영웅 없음");
+                UnselectAction();
+                return;
+            }
         }
         else if (_state == WaitFor.SelectSummonRoom)
         {
-            NextSummonRoom();
+            _canSelectRooms = DungeonMap.Instance.GetRoomNumbersOfType(ActionManager.Instance.ActionTypeToRoomType(_selectedAction, _selectedMonster)).ToList();
+            _canSelectCount = _canSelectRooms.Count;
         }
-        else if(_state == WaitFor.SelectMoveResource)
+        else if (_state == WaitFor.SelectMoveRoom)
         {
-            NextResource();
+            _canSelectRooms = DungeonMap.Instance.GetConnectedRoomNumberList(_selectedMonster.CurrentRoomNumber).ToList();
+            _canSelectCount = _canSelectRooms.Count;
         }
-    }
+        else if (_state == WaitFor.SelectMoveResource)
+        {
+            _canSelectResources = DungeonMap.Instance.GetRoomResources(_selectedMonster.CurrentRoomNumber).ToList();
+            _canSelectCount = _canSelectResources.Count;
 
-    private void NextCard()
-    {
-        if (_deckManager.HandCount == 0) return;
-
-        _currentIndex = (_currentIndex + 1) % _deckManager.HandCount;
-        _deckManager.GetCard(_currentIndex).PrintCardInfo();
-    }
-
-    private void NextActionList()
-    {
-        _currentIndex = (_currentIndex + 1) % _selectedCard.CardActionCount;
-        _selectedCard.PrintActionListInfo(_currentIndex);
-    }
-
-    private void NextAction()
-    {
-        _currentIndex = (_currentIndex + 1) % _selectedActionList.Count;
-        Debug.Log($"현재 행동 : {_selectedActionList[_currentIndex]} ");
-    }
-
-    private void NextMonster()
-    {
-        if (_activeMonsters.Count == 0) return;
-
-        _currentIndex = (_currentIndex + 1) % _activeMonsters.Count;
-        Debug.Log($"현재 유닛 : {_activeMonsters[_currentIndex]} ");
-    }
-
-    private void NextRoom()
-    {
-        _currentIndex = (_currentIndex + 1) % DungeonMap.Instance.GetConnectedRoomNumberList(_selectedMonster.CurrentRoomNumber).Count;
-        int room = DungeonMap.Instance.GetConnectedRoomNumberList(_selectedMonster.CurrentRoomNumber)[_currentIndex];
-        Debug.Log($"이동 방 : {DungeonMap.Instance.GetRoomByNumber(room).Name} ");
-    }
-
-    private void NextSummonRoom()
-    {
-        _currentIndex = (_currentIndex + 1) % DungeonMap.Instance.GetRoomNumbersOfType(ActionManager.Instance.ActionTypeToRoomType(_selectedAction, _selectedMonster)).Count;
-        int room = DungeonMap.Instance.GetRoomNumbersOfType(ActionManager.Instance.ActionTypeToRoomType(_selectedAction, _selectedMonster))[_currentIndex];
-        Debug.Log($"소환 방 : {DungeonMap.Instance.GetRoomByNumber(room).Name} ");
-    }
-
-    private void NextResource()
-    {
-        int resourceCount = DungeonMap.Instance.GetRoomResources(_selectedMonster.CurrentRoomNumber).Count;
-        if (resourceCount == 0) return;
-
-        _currentIndex = (_currentIndex + 1) % resourceCount;
+            if (_canSelectCount == 0)
+            {
+                Action();
+            }
+        }
     }
 
     private void OnSelect(InputAction.CallbackContext context)
     {
-        if (_state == WaitFor.None)
+        if (_canSelectCount == 0 || _state == WaitFor.None)
         {
+            Debug.Log($"선택 불가능");
             return;
         }
         else if (_state == WaitFor.SelectCard)
@@ -199,13 +229,13 @@ public class Clan : MonoBehaviour
         {
             SelectMonster();
         }
-        else if (_state == WaitFor.SelectMoveRoom)
+        else if (_state == WaitFor.SelectTargetHero)
+        {
+            SelectTargetHero();
+        }
+        else if (_state == WaitFor.SelectSummonRoom || _state == WaitFor.SelectMoveRoom)
         {
             SelectTargetRoom();
-        }
-        else if (_state == WaitFor.SelectSummonRoom)
-        {
-            SelectSummonRoom();
         }
         else if (_state == WaitFor.SelectMoveResource)
         {
@@ -215,161 +245,102 @@ public class Clan : MonoBehaviour
 
     private void SelectCard()
     {
-        if (_deckManager.HandCount == 0) return;
-
-        _selectedCard = _deckManager.SelectCard(_currentIndex);
-        CheckCard();
-    }
-
-    private void CheckCard()
-    {
-        _currentIndex = 0;
-
-        if (_selectedCard.GetActionListsCount == 1)
-        {
-            SelectActionList();
-        }
-        else if (1 < _selectedCard.GetActionListsCount)
-        {
-            ChangeState(WaitFor.SelectActionList);
-        }
+        _selectedCard = _canSelectCards[_currentIndex];
+        _deckManager.SelectCard(_currentIndex);
+        ChangeState(WaitFor.SelectActionList);
     }
 
     private void SelectActionList()
     {
-        _selectedActionList = _selectedCard.GetActionList(_currentIndex).ToList();
+        _selectedActionList = _canSelectActionLists[_currentIndex];
         Debug.Log($"{_selectedCard.PrintActionListInfo(_currentIndex)} 선택됨");
-        CheckActionList();
-    }
-
-    private void CheckActionList()
-    {
-        _currentIndex = 0;
-
-        if (_selectedActionList.Count <= 0)
-        {
-            _selectedActionList = null;
-            EndCard();
-        }
-        else if(_selectedActionList.Count == 1)
-        {
-            SelectAction();
-        }
-        else if(1 < _selectedActionList.Count)
-        {
-            ChangeState(WaitFor.SelectAction);
-        }
+        ChangeState(WaitFor.SelectAction);
     }
 
     private void SelectAction()
     {
-        _selectedAction = _selectedActionList[_currentIndex];
+        _selectedAction = _canSelectActions[_currentIndex];
         Debug.Log($"현재 행동 : {_selectedAction} 선택됨");
         CheckAction();
     }
 
     private void CheckAction()
     {
-        _currentIndex = 0;
-
         ActionType action = _selectedAction;
         if (action == ActionType.Draw)
         {
             Action();
         }
-        else if (ActionType.SummonInSword <= action && action <= ActionType.SummonInTreasure)
-        {
-            ChangeState(WaitFor.SelectSummonRoom);
-        }
         else if (action == ActionType.Move
             || action == ActionType.Activate
             || action == ActionType.SRAttack
             || action == ActionType.LRAttack
-            || action == ActionType.Defense
             || action == ActionType.SummonInSameRoom
             || (ActionType.CreateCoin <= action && action <= ActionType.CreateTrap))
         {
-            CheckActiveMonster();
-        }
-    }
-
-    private void CheckActiveMonster()
-    {
-        _currentIndex = 0;
-
-        if (_activeMonsters.Count == 0)
-        {
-            Debug.Log($"선택 가능한 몬스터 없음");
-            return;
-        }
-        else if (_activeMonsters.Count == 1)
-        {
-            SelectMonster();
-        }
-        else
-        {
             ChangeState(WaitFor.SelectMonster);
+        }
+        else if (ActionType.SummonInSword <= action && action <= ActionType.SummonInTreasure)
+        {
+            ChangeState(WaitFor.SelectSummonRoom);
         }
     }
 
     private void SelectMonster()
     {
-        _selectedMonster = _activeMonsters[_currentIndex];
+        _selectedMonster = _canSelectMonsters[_currentIndex];
         Debug.Log($"현재 유닛 : {_selectedMonster} 선택됨");
 
         ActionType action = _selectedAction;
-        if (action == ActionType.Move)
+        if (action == ActionType.SummonInSameRoom
+            || ActionType.CreateCoin <= action && action <= ActionType.CreateTrap)
+        {
+            Action();
+        }
+        else if (action == ActionType.Move)
         {
             ChangeState(WaitFor.SelectMoveRoom);
         }
-        else if(ActionType.CreateCoin <= action && action <= ActionType.CreateTrap)
+        else if (action == ActionType.SRAttack
+            || action == ActionType.LRAttack)
         {
-            Action();
+            ChangeState(WaitFor.SelectTargetHero);
         }
     }
 
     private void SelectTargetRoom()
     {
-        _selectedTargetRoom = DungeonMap.Instance.GetConnectedRoomNumberList(_selectedMonster.CurrentRoomNumber)[_currentIndex];
-        Debug.Log($"이동 방 : {DungeonMap.Instance.GetRoomByNumber(_selectedTargetRoom).Name} 선택됨");
-        CheckRoom();
-    }
+        _selectedTargetRoom = _canSelectRooms[_currentIndex];
+        Debug.Log($"방 : {DungeonMap.Instance.GetRoomByNumber(_selectedTargetRoom).Name} 선택됨");
 
-    private void SelectSummonRoom()
-    {
-        _selectedTargetRoom = DungeonMap.Instance.GetRoomNumbersOfType(ActionManager.Instance.ActionTypeToRoomType(_selectedAction, _selectedMonster))[_currentIndex];
-        Debug.Log($"소환 방 : {DungeonMap.Instance.GetRoomByNumber(_selectedTargetRoom).Name} 선택됨");
-        Action();
-    }
-
-    private void CheckRoom()
-    {
-        _currentIndex = 0;
-
-        List<Resource> resources = DungeonMap.Instance.GetRoomResources(_selectedMonster.CurrentRoomNumber);
-        if (resources.Count == 0)
-        {
-            Action();
-        }
-        else if(0 < resources.Count)
+        ActionType action = _selectedAction;
+        if (action == ActionType.Move)
         {
             ChangeState(WaitFor.SelectMoveResource);
         }
+        else if (ActionType.SummonInSword <= action && action <= ActionType.SummonInTreasure)
+        {
+            Action();
+        }
+    }
+
+    private void SelectTargetHero()
+    {
+        _selectedTargetHero = _canSelectHeroes[_currentIndex];
+        Debug.Log($"공격 대상 : {_selectedTargetHero} 선택됨");
+        Action();
     }
 
     private void SelectTargetResource()
     {
-        _selectedTargetResource = DungeonMap.Instance.GetRoomResources(_selectedMonster.CurrentRoomNumber)[_currentIndex];
+        _selectedTargetResource = _canSelectResources[_currentIndex];
+        Debug.Log($"방 : {_selectedTargetResource} 선택됨");
         Action();
     }
 
     private void OnUnselect(InputAction.CallbackContext context)
     {
-        if (_state == WaitFor.None)
-        {
-            return;
-        }
-        else if (_state == WaitFor.SelectCard)
+        if (_state == WaitFor.None || _state == WaitFor.SelectCard)
         {
             return;
         }
@@ -389,7 +360,7 @@ public class Clan : MonoBehaviour
         {
             UnselectAction();
         }
-        else if (_state == WaitFor.SelectMoveRoom)
+        else if (_state == WaitFor.SelectMoveRoom || _state == WaitFor.SelectTargetHero)
         {
             UnselectMonster();
         }
@@ -408,20 +379,9 @@ public class Clan : MonoBehaviour
 
     private void UnselectActionList()
     {
-        Debug.Log($"{ActionListInfo()} 선택 취소");
+        Debug.Log($"{_selectedActionList} 선택 취소");
         _selectedActionList = null;
         ChangeState(WaitFor.SelectActionList);
-    }
-
-    private string ActionListInfo()
-    {
-        string info = "";
-        foreach (ActionType action in _selectedActionList)
-        {
-            info += $"{action} ";
-        }
-
-        return info;
     }
 
     private void UnselectAction()
@@ -457,7 +417,6 @@ public class Clan : MonoBehaviour
         }
         else if (_state == WaitFor.SelectActionList)
         {
-            _deckManager.Discard(_selectedCard);
             EndCard();
         }
     }
@@ -467,19 +426,10 @@ public class Clan : MonoBehaviour
         TurnManager.Instance.StateMachine.ChangeState(TurnManager.Instance.HeroInvasionState);
     }
 
-    private void EndAction()
-    {
-        _selectedActionList?.Remove(_selectedAction);
-        _selectedAction = ActionType.None;
-        _selectedMonster = null;
-        _selectedTargetRoom = -1;
-        _selectedTargetResource = null;
-        CheckActionList();
-    }
-
     private void EndCard()
     {
         _selectedCard = null;
+        _canSelectCards.Clear();
 
         if (TurnManager.Instance.CurrentRound == 0)
         {
@@ -491,63 +441,128 @@ public class Clan : MonoBehaviour
         }
     }
 
-    public void Action()
+    private void EndAction()
     {
-        ActionType action = _selectedAction;
-        if (action == ActionType.Draw)
-        {
-            _deckManager.DrawCard();
-        }
-        else if (action == ActionType.Move)
-        {
-            ActionManager.Instance.Move(_selectedMonster, _selectedTargetRoom, _selectedTargetResource);
-        }
-        else if (action == ActionType.Activate)
-        {
-            // _monster.Activate();
-        }
-        else if (action == ActionType.SRAttack)
-        {
-            // _monster.SRAttack();
-        }
-        else if (action == ActionType.LRAttack)
-        {
-            // _monster.LRAttack();
-        }
-        else if (action == ActionType.Defense)
-        {
-            // _monster.Defense();
-        }
-        else if (ActionType.SummonInSameRoom <= action && action <= ActionType.SummonInJail)
-        {
-            if (_remainMonsters.Count < 1)
-            {
-                Debug.Log($"소환 불가(남은 몬스터 없음)");
-            }
-            else
-            {
-                Monster monster = _remainMonsters.Pop();
-
-                ActionManager.Instance.Summon(_selectedTargetRoom, monster);
-                _activeMonsters.Add(monster);
-            }
-        }
-        else if (ActionType.CreateCoin <= action && action <= ActionType.CreateTrap)
-        {
-            ActionManager.Instance.Create(_selectedMonster, action);
-        }
-
-        EndAction();
+        _selectedActionList?.Remove(_selectedAction);
+        _selectedAction = ActionType.None;
+        _selectedMonster = null;
+        _selectedTargetHero = null;
+        _selectedTargetRoom = -1;
+        _selectedTargetResource = null;
+        TurnManager.Instance.Guild.CheckHeroState();
+        ChangeState(WaitFor.SelectAction);
     }
 
-    public void InitSummon()
+    private void CacheComponents()
     {
-        RoomType initSummonRoom = _clanData.CanSummonRoom;
+        _deckManager = GetComponent<DeckManager>();
+    }
 
-        _selectedAction = ActionManager.Instance.RoomTypeToActionType(initSummonRoom);
-        if (_selectedActionList == null) _selectedActionList = new();
-        _selectedActionList.Add(_selectedAction);
+    private void Init()
+    {
+        int max = _clanData.MaxSummon;
 
-        ChangeState(WaitFor.SelectSummonRoom);
+        for (int i = 0; i < max; i++)
+        {
+            MonsterData monsterData = _clanData.ClanMonster;
+            Monster monster = new Monster(monsterData);
+            _remainMonsters.Push(monster);
+        }
+
+        for (int i = 0; i < _clanData.MonsterCardList.Count; i++)
+        {
+            PlayCardData data = _clanData.MonsterCardList[i];
+            int times = _clanData.MonsterCardQuantity[i];
+
+            for (int j = 0; j < times; j++)
+            {
+                PlayCard card = new PlayCard(data);
+                _deckManager.Discard(card);
+            }
+        }
+
+        _deckManager.Shuffle();
+    }
+
+    private void BindInputAction()
+    {
+        _prevInput.action.Enable();
+        _nextInput.action.Enable();
+        _selectInput.action.Enable();
+        _unselectInput.action.Enable();
+        _endInput.action.Enable();
+        _prevInput.action.performed += OnPrev;
+        _nextInput.action.performed += OnNext;
+        _selectInput.action.performed += OnSelect;
+        _unselectInput.action.performed += OnUnselect;
+        _endInput.action.performed += OnEnd;
+    }
+
+    private void UnbindInputAction()
+    {
+        _prevInput.action.Disable();
+        _nextInput.action.Disable();
+        _selectInput.action.Disable();
+        _unselectInput.action.Disable();
+        _endInput.action.Disable();
+        _prevInput.action.performed -= OnPrev;
+        _nextInput.action.performed -= OnNext;
+        _selectInput.action.performed -= OnSelect;
+        _unselectInput.action.performed -= OnUnselect;
+        _endInput.action.performed -= OnEnd;
+    }
+
+    private void OnPrev(InputAction.CallbackContext context)
+    {
+        if (_canSelectCount == 0)
+        {
+            Debug.Log($"선택 불가능");
+            return;
+        }
+
+        _currentIndex = (_currentIndex + _canSelectCount - 1) % _canSelectCount;
+
+        PrintCurrentSelect();
+    }
+
+    private void OnNext(InputAction.CallbackContext context)
+    {
+        if (_canSelectCount == 0)
+        {
+            Debug.Log($"선택 불가능");
+            return;
+        }
+
+        _currentIndex = (_currentIndex + 1) % _canSelectCount;
+
+        PrintCurrentSelect();
+    }
+
+    private void PrintCurrentSelect()
+    {
+        if (_state == WaitFor.SelectCard)
+        {
+            _canSelectCards[_currentIndex].PrintCardInfo();
+        }
+        else if (_state == WaitFor.SelectActionList)
+        {
+            _selectedCard.PrintActionListInfo(_currentIndex);
+        }
+        else if (_state == WaitFor.SelectAction)
+        {
+            Debug.Log($"현재 행동 : {_canSelectActions[_currentIndex]} ");
+        }
+        else if (_state == WaitFor.SelectMonster)
+        {
+            Debug.Log($"현재 유닛 : {_canSelectMonsters[_currentIndex]} ");
+        }
+        else if (_state == WaitFor.SelectTargetHero)
+        {
+            Debug.Log($"공격 대상 : {_canSelectHeroes[_currentIndex]} ");
+        }
+        else if (_state == WaitFor.SelectSummonRoom || _state == WaitFor.SelectMoveRoom)
+        {
+            Debug.Log($"방 : {DungeonMap.Instance.GetRoomByNumber(_canSelectRooms[_currentIndex]).Name} ");
+        }
     }
 }

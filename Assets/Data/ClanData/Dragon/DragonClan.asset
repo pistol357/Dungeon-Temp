@@ -19,7 +19,7 @@ MonoBehaviour:
   _initialSummon: 1
   _canSummonRoom: 5
   _monsterCardList:
-  - {fileID: 11400000, guid: ad499aed109571242a8d55dfb309e051, type: 2}
-  - {fileID: 11400000, guid: 8c26797223a6db442a623efa945d8440, type: 2}
-  - {fileID: 11400000, guid: e801bdc17c3ff5c4b940bb6515a9edb5, type: 2}
+  - {fileID: 11400000, guid: f0b924a43c444034191f812e8b664c1b, type: 2}
+  - {fileID: 11400000, guid: 8c0470adc9ada4d4abc7e6906851d5ee, type: 2}
+  - {fileID: 11400000, guid: 15eb0d6c84592ef478cd44521e189a9b, type: 2}
   _monsterCardQuantity: 020000000500000003000000

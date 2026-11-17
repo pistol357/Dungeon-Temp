@@ -29,6 +29,8 @@ public class TurnManager : MonoBehaviour
     public MonsterActionState MonsterActionState { get; private set; }
     public HeroInvasionState HeroInvasionState { get; private set; }
     public EndTurnState EndTurnState { get; private set; }
+    public GameOverState GameOverState { get; private set; }
+    public GameClearState GameClearState { get; private set; }
     public event Action OnEndMonsterActionState;
     public int CurrentRound => _currentRound;
     public int CurrentTurnIndex => _currentTurnIndex;
@@ -80,6 +82,8 @@ public class TurnManager : MonoBehaviour
         MonsterActionState = new MonsterActionState(this);
         HeroInvasionState = new HeroInvasionState(this);
         EndTurnState = new EndTurnState(this);
+        GameOverState = new GameOverState(this);
+        GameClearState = new GameClearState(this);
     }
 
     private void Init()

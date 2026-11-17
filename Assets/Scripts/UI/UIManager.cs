@@ -1,12 +1,7 @@
-using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
-    private event Action UIChange;
-
-    public void OnUIChange()
-    {
-        UIChange?.Invoke();
-    }
+    [SerializeField] private List<Sprite> _actionIcon;
 }
