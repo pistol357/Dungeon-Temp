@@ -12,6 +12,16 @@ public class HandView : MonoBehaviour
 
     private void RefreshUI()
     {
+        if (_clan.State != WaitFor.SelectCard)
+        {
+            _cardsListView.gameObject.SetActive(false);
+            return;
+        }
+        else if (_clan.State == WaitFor.SelectCard)
+        {
+            _cardsListView.gameObject.SetActive(true);
+        }
+
         foreach(Transform child in _cardsListView)
         {
             Destroy(child.gameObject);

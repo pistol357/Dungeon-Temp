@@ -34,7 +34,9 @@ public class Clan : MonoBehaviour
     private int _canSelectCount;
     private int _currentIndex;
 
+    public WaitFor State => _state;
     public DeckManager DeckManager => _deckManager;
+    public PlayCard SelectedCard => _selectedCard;
     public int CurrentIndex => _currentIndex;
 
     private void Awake() => CacheComponents();
