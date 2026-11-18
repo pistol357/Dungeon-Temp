@@ -196,19 +196,19 @@ public class Guild : MonoBehaviour
                 {
                     room.RemoveResource(ResourceType.Trap);
                     hero.Damage(1);
+                    CheckHeroState();
                 }
-                else
+
+
+                List<Hero> list = room.Heroes;
+
+                if (list.Count > 0)
                 {
-                    List<Hero> list = room.Heroes;
-                    
-                    if(list.Count > 0)
+                    foreach (Hero h in list)
                     {
-                        foreach (Hero h in list)
+                        if (h.State == UnitState.Exhausted)
                         {
-                            if (h.State == UnitState.Exhausted)
-                            {
-                                h.Cheer();
-                            }
+                            h.Cheer();
                         }
                     }
                 }

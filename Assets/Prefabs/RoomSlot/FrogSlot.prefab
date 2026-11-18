@@ -51,6 +51,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ResourceSlot
   _resourceType: 3
+  _resourceIcon: {fileID: 7903120612492320165}
   _countImage: {fileID: 4116522079715836285}
   _countImages:
   - {fileID: 21300000, guid: 1fc96fafd884c5249aa306e5c24fb4f9, type: 3}

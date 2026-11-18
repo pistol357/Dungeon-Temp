@@ -4,6 +4,7 @@ public class Monster : IActionable
 {
     [SerializeField] private MonsterData _data;
 
+    private Clan _clan;
     private string _name;
     private UnitState _state;
     private int _hp;
@@ -14,9 +15,10 @@ public class Monster : IActionable
     public UnitState State => _state;
     public int CurrentRoomNumber => _currentRoom.RoomNumber;
 
-    public Monster(MonsterData data)
+    public Monster(MonsterData data, Clan clan)
     {
         _data = data;
+        _clan = clan;
         _name = data.name;
         _hp = data.MaxHp;
     }
@@ -37,9 +39,14 @@ public class Monster : IActionable
         }
     }
 
+    public void Heal()
+    {
+        _hp = _data.MaxHp;
+    }
+
     public void Return()
     {
         _state = UnitState.None;
-        ActionManager.Instance.Return(this);
+        _clan.Return(this);
     }
 }

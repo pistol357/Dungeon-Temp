@@ -171,6 +171,11 @@ public class ActionManager : MonoBehaviour
         Debug.Log($"{unit} 공격 받음");
     }
 
+    public void Heal(IActionable unit)
+    {
+        unit.Heal();
+    }
+
     private void SetSingleton()
     {
         if (_instance != null && _instance != this)

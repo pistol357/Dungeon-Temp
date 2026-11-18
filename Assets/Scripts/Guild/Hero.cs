@@ -42,6 +42,11 @@ public class Hero : IActionable
         }
     }
 
+    public void Heal()
+    {
+        _hp = _data.MaxHp;
+    }
+
     public void Cheer()
     {
         _state = UnitState.Active;

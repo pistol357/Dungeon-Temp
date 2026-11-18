@@ -18,5 +18,12 @@ public enum ActionType
     CreateBook,
     CreateFrog,
     CreateBone,
-    CreateTrap
+    CreateTrap,
+    DestroyCoin,
+    DestroyBook,
+    DestroyFrog,
+    DestroyBone,
+    DestroyTrap,
+    Exchange,
+    Heal
 }

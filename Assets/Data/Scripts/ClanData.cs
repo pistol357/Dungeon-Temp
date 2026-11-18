@@ -6,7 +6,7 @@ public class ClanData : ScriptableObject
 {
     [SerializeField] private string _name;
     [SerializeField] private MonsterData _clanMonster;
-    [SerializeField] private string _ability;
+    [SerializeField] private ActionType _activateAction;
     [SerializeField] private int _maxSummon;
     [SerializeField] private int _initialSummon;
     [SerializeField] private RoomType _canSummonRoom;
@@ -15,7 +15,7 @@ public class ClanData : ScriptableObject
 
     public string Name => _name;
     public MonsterData ClanMonster => _clanMonster;
-    public string Ability => _ability;
+    public ActionType ActivateAction => _activateAction;
     public int MaxSummon => _maxSummon;
     public int InitialSummon => _initialSummon;
     public RoomType CanSummonRoom => _canSummonRoom;

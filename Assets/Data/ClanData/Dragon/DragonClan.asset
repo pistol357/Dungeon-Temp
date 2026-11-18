@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Clan
   _name: Dragon
   _clanMonster: {fileID: 11400000, guid: 4aff1c263bf866c4397a0f068b000baf, type: 2}
-  _ability: Heal
+  _activateAction: 25
   _maxSummon: 1
   _initialSummon: 1
   _canSummonRoom: 5

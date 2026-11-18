@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RoomData
   _roomType: 2
   _name: "\uBB18\uC9C0"
-  _activate: 1
+  _activateAction: 17
   _resourceType: 4
   _craftingCard: 0

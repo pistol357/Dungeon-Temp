@@ -16,6 +16,7 @@ public class Room
 
     public int RoomNumber => _roomNumber;
     public string Name => _name;
+    public ActionType ActivateAction => _roomData.ActivateAction;
     public RoomType RoomType => _roomType;
     public List<Monster> Monsters => _monsters;
     public List<Hero> Heroes => _heroes;

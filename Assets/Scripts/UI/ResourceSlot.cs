@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class ResourceSlot : MonoBehaviour
 {
     [SerializeField] private ResourceType _resourceType;
+    [SerializeField] private Image _resourceIcon;
     [SerializeField] private Image _countImage;
     [SerializeField] private List<Sprite> _countImages;
 
@@ -31,11 +32,13 @@ public class ResourceSlot : MonoBehaviour
 
         if (count == 0)
         {
-            gameObject.SetActive(false);
+            _resourceIcon.enabled = false;
+            _countImage.enabled = false;
         }
         else if (count > 0)
         {
-            gameObject.SetActive(true);
+            _resourceIcon.enabled = true;
+            _countImage.enabled = true;
             _countImage.sprite = _countImages[count];
         }
     }

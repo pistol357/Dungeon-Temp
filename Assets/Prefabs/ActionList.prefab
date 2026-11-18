@@ -154,7 +154,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ActionListSlot
   _selectActionList: {fileID: 2574354773672008098}
-  _actionIconPrefab: {fileID: 8507709447292638590, guid: 52cfe7494cdcfa44e967e7453d3aa88b, type: 3}
+  _actionIconPrefab: {fileID: 1229360949858264589, guid: 389c5018fa2239849afc654ac5567637, type: 3}
   _actionListSlot: {fileID: 6598795805997628287}
 --- !u!114 &917672222537474829
 MonoBehaviour:

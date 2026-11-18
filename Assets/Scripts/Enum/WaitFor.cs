@@ -9,5 +9,6 @@ public enum WaitFor
     SelectSummonRoom,
     SelectMoveResource,
     SelectCreateResource,
-    SelectTargetHero
+    SelectTargetHero,
+    SelectActivateAction
 }

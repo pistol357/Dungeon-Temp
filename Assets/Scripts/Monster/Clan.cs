@@ -30,13 +30,20 @@ public class Clan : MonoBehaviour
     private int _selectedTargetRoom = -1;
     private List<Resource> _canSelectResources = new();
     private Resource _selectedTargetResource;
+    private List<ActionType> _canSelectActivateActions = new();
+    private ActionType _selectedActivateAction;
     private WaitFor _state;
     private int _canSelectCount;
     private int _currentIndex;
+    private bool _isActioned;
 
     public WaitFor State => _state;
     public DeckManager DeckManager => _deckManager;
     public PlayCard SelectedCard => _selectedCard;
+    public List<ActionType> SelectedActionList => _selectedActionList.ToList();
+    public ActionType SelectedAction => _selectedAction;
+    public List<int> CanSelectRoomNumber => _canSelectRooms.ToList();
+    public int CurrentRoomNumber => _canSelectRooms[_currentIndex];
     public int CurrentIndex => _currentIndex;
 
     private void Awake() => CacheComponents();
@@ -55,9 +62,16 @@ public class Clan : MonoBehaviour
         ChangeState(WaitFor.SelectSummonRoom);
     }
 
-    public void Action()
+    public void Return(Monster monster)
     {
-        ActionType action = _selectedAction;
+        ActionManager.Instance.Return(monster);
+
+        _remainMonsters.Push(monster);
+        _activeMonsters.Remove(monster);
+    }
+
+    public void Action(ActionType action)
+    {
         if (action == ActionType.Draw)
         {
             _deckManager.DrawCard();
@@ -68,7 +82,7 @@ public class Clan : MonoBehaviour
         }
         else if (action == ActionType.Activate)
         {
-            // Activate();
+         ActivateAction(action);   
         }
         else if (action == ActionType.SRAttack || action == ActionType.LRAttack)
         {
@@ -96,8 +110,37 @@ public class Clan : MonoBehaviour
         {
             ActionManager.Instance.Create(_selectedMonster, action);
         }
+        else if (action == ActionType.Heal)
+        {
+            ActionManager.Instance.Heal(_selectedMonster);
+        }
 
-        EndAction();
+        if (action != ActionType.Activate)
+        {
+            EndAction();
+        }
+    }
+
+    private void ActivateAction(ActionType action)
+    {
+        if(action == ActionType.Move)
+        {
+            if (_selectedTargetRoom == -1)
+            {
+                ChangeState(WaitFor.SelectMoveRoom);
+                return;
+            }
+        }
+        else if (action == ActionType.SRAttack || action == ActionType.LRAttack)
+        {
+            if (_selectedTargetHero != null)
+            {
+                ChangeState(WaitFor.SelectTargetHero);
+                return;
+            }
+        }
+
+        Action(_selectedActivateAction);
     }
 
     public void ChangeState(WaitFor state)
@@ -109,6 +152,7 @@ public class Clan : MonoBehaviour
 
         if (_state == WaitFor.SelectCard)
         {
+            _isActioned = false;
             _canSelectCards = _deckManager.Hand.ToList();
             _canSelectCount = _canSelectCards.Count;
         }
@@ -154,6 +198,11 @@ public class Clan : MonoBehaviour
             {
                 Debug.Log($"선택 가능한 몬스터 없음");
                 UnselectAction();
+                return;
+            }
+            else if (_canSelectCount == 1)
+            {
+                SelectMonster();
                 return;
             }
         }
@@ -203,8 +252,16 @@ public class Clan : MonoBehaviour
 
             if (_canSelectCount == 0)
             {
-                Action();
+                Action(_selectedAction);
             }
+        }
+        else if (_state == WaitFor.SelectActivateAction)
+        {
+            _canSelectActivateActions.Clear();
+
+            _canSelectActivateActions.Add(_clanData.ActivateAction);
+            _canSelectActivateActions.Add(DungeonMap.Instance.GetRoomByNumber(_selectedMonster.CurrentRoomNumber).ActivateAction);
+            _canSelectCount = _canSelectActivateActions.Count;
         }
     }
 
@@ -243,6 +300,10 @@ public class Clan : MonoBehaviour
         {
             SelectTargetResource();
         }
+        else if (_state == WaitFor.SelectActivateAction)
+        {
+            SelectActivateAction();
+        }
     }
 
     private void SelectCard()
@@ -271,7 +332,7 @@ public class Clan : MonoBehaviour
         ActionType action = _selectedAction;
         if (action == ActionType.Draw)
         {
-            Action();
+            Action(_selectedAction);
         }
         else if (action == ActionType.Move
             || action == ActionType.Activate
@@ -297,7 +358,7 @@ public class Clan : MonoBehaviour
         if (action == ActionType.SummonInSameRoom
             || ActionType.CreateCoin <= action && action <= ActionType.CreateTrap)
         {
-            Action();
+            Action(_selectedAction);
         }
         else if (action == ActionType.Move)
         {
@@ -307,6 +368,10 @@ public class Clan : MonoBehaviour
             || action == ActionType.LRAttack)
         {
             ChangeState(WaitFor.SelectTargetHero);
+        }
+        else if (action == ActionType.Activate)
+        {
+            ChangeState(WaitFor.SelectActivateAction);
         }
     }
 
@@ -322,7 +387,7 @@ public class Clan : MonoBehaviour
         }
         else if (ActionType.SummonInSword <= action && action <= ActionType.SummonInTreasure)
         {
-            Action();
+            Action(_selectedAction);
         }
     }
 
@@ -330,18 +395,30 @@ public class Clan : MonoBehaviour
     {
         _selectedTargetHero = _canSelectHeroes[_currentIndex];
         Debug.Log($"공격 대상 : {_selectedTargetHero} 선택됨");
-        Action();
+        Action(_selectedAction);
     }
 
     private void SelectTargetResource()
     {
         _selectedTargetResource = _canSelectResources[_currentIndex];
         Debug.Log($"방 : {_selectedTargetResource} 선택됨");
-        Action();
+        Action(_selectedAction);
+    }
+
+    private void SelectActivateAction()
+    {
+        _selectedActivateAction = _canSelectActivateActions[_currentIndex];
+        Action(_selectedAction);
     }
 
     private void OnUnselect(InputAction.CallbackContext context)
     {
+        if (_isActioned)
+        {
+            Debug.Log($"이미 사용한 카드는 취소할 수 없음");
+            return;
+        }
+
         if (_state == WaitFor.None || _state == WaitFor.SelectCard)
         {
             return;
@@ -362,7 +439,7 @@ public class Clan : MonoBehaviour
         {
             UnselectAction();
         }
-        else if (_state == WaitFor.SelectMoveRoom || _state == WaitFor.SelectTargetHero)
+        else if (_state == WaitFor.SelectMoveRoom || _state == WaitFor.SelectTargetHero || _state == WaitFor.SelectActivateAction)
         {
             UnselectMonster();
         }
@@ -417,7 +494,7 @@ public class Clan : MonoBehaviour
         {
             EndMonsterActionState();
         }
-        else if (_state == WaitFor.SelectActionList)
+        else if (_state == WaitFor.SelectActionList || _state == WaitFor.SelectAction)
         {
             EndCard();
         }
@@ -445,12 +522,14 @@ public class Clan : MonoBehaviour
 
     private void EndAction()
     {
+        _isActioned = true;
         _selectedActionList?.Remove(_selectedAction);
         _selectedAction = ActionType.None;
         _selectedMonster = null;
         _selectedTargetHero = null;
         _selectedTargetRoom = -1;
         _selectedTargetResource = null;
+        _selectedActivateAction = ActionType.None;
         TurnManager.Instance.Guild.CheckHeroState();
         ChangeState(WaitFor.SelectAction);
     }
@@ -467,7 +546,7 @@ public class Clan : MonoBehaviour
         for (int i = 0; i < max; i++)
         {
             MonsterData monsterData = _clanData.ClanMonster;
-            Monster monster = new Monster(monsterData);
+            Monster monster = new Monster(monsterData, this);
             _remainMonsters.Push(monster);
         }
 

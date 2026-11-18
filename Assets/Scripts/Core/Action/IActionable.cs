@@ -6,4 +6,6 @@ public interface IActionable
     public void SetRoom(Room room);
 
     public void Damage(int damage);
+
+    public void Heal();
 }
