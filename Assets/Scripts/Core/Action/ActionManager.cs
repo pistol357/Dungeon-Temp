@@ -157,11 +157,18 @@ public class ActionManager : MonoBehaviour
         int currentRoomNumber = unit.CurrentRoomNumber;
         Room room = DungeonMap.Instance.GetRoomByNumber(currentRoomNumber);
         ResourceType resourceType = ActionTypeToResourceType(action);
-
         Resource resource = new Resource(resourceType);
-        room.AddResource(resource);
 
-        Debug.Log($"{resource.Type}을 {room.Name}에 생산함");
+        if (DungeonMap.Instance.GetCountOfResourceType(resourceType) < 5)
+        {
+            room.AddResource(resource);
+
+            Debug.Log($"{resource.Type}을 {room.Name}에 생산함");
+        }
+        else
+        {
+            Debug.Log($"{resource.Type}생산 불가");
+        }
     }
 
     public void Attack(IActionable unit)

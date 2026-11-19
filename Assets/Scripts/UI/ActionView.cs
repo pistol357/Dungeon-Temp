@@ -1,10 +1,9 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class ActionView : MonoBehaviour
 {
+    [SerializeField] private GameObject _actionListPrefab;
     [SerializeField] private GameObject _actionIconPrefab;
     [SerializeField] private Transform _actionSlot;
 
@@ -19,31 +18,44 @@ public class ActionView : MonoBehaviour
             Destroy(child.gameObject);
         }
 
-        if (_clan.State == WaitFor.SelectAction)
+        if(_clan.SelectedAction != ActionType.None)
         {
-            List<ActionType> actionList = _clan.SelectedActionList;
-            for (int i = 0; i < actionList.Count; i++)
-            {
-                List<Image> actions = Instantiate(_actionIconPrefab, _actionSlot).GetComponentsInChildren<Image>().ToList();
-                actions[1].sprite = UIManager.Instance.GetSpriteByActionType(actionList[i]);
+            ActionIconView selectedActionIcon = Instantiate(_actionIconPrefab, _actionSlot).GetComponent<ActionIconView>();
+            selectedActionIcon.SetIcon(UIManager.Instance.GetSpriteByActionType(_clan.SelectedAction));
+        }
 
-                if (i == _clan.CurrentIndex)
+        if(_clan.State == WaitFor.SelectActionList)
+        {
+            PlayCard card = _clan.SelectedCard;
+            for (int i = 0; i < card.GetActionListsCount; i++)
+            {
+                ActionListView actionList = Instantiate(_actionListPrefab, _actionSlot).GetComponent<ActionListView>();
+                actionList.SetActionList(card.GetActionList(i));
+
+                if (i != _clan.CurrentIndex)
                 {
-                    actions[0].gameObject.SetActive(true);
-                }
-                else if (i != _clan.CurrentIndex)
-                {
-                    actions[0].gameObject.SetActive(false);
+                    actionList.Unselect();
                 }
             }
         }
-        else if (_clan.SelectedAction != ActionType.None)
-        {
-            List<ActionType> actionList = new();
-            actionList.Add(_clan.SelectedAction);
 
-            List<Image> actions = Instantiate(_actionIconPrefab, _actionSlot).GetComponentsInChildren<Image>().ToList();
-            actions[1].sprite = UIManager.Instance.GetSpriteByActionType(actionList[0]);
+        if (_clan.State == WaitFor.SelectAction)
+        {
+            List<ActionType> actionList = _clan.SelectedActionList;
+            for(int i = 0; i < actionList.Count; i++)
+            {
+                ActionIconView actionIcon = Instantiate(_actionIconPrefab, _actionSlot).GetComponent<ActionIconView>();
+                actionIcon.SetIcon(UIManager.Instance.GetSpriteByActionType(actionList[i]));
+
+                if (i == _clan.CurrentIndex)
+                {
+                    actionIcon.Select();
+                }
+                else if (i != _clan.CurrentIndex)
+                {
+                    actionIcon.Unselect();
+                }
+            }
         }
     }
 }

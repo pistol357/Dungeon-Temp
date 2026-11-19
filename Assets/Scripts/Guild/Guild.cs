@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class Guild : MonoBehaviour
 {
+    private const float UPDATE_TIME = 0.5f;
+
     [SerializeField] private GuildData _guildData;
 
     private Stack<Hero> _remainWarriors = new();
@@ -12,16 +14,20 @@ public class Guild : MonoBehaviour
     private List<GuildCard> _guildDeck = new();
     private List<GuildCard> _guildOpen = new();
     private GuildState _state;
+    private Difficulty _difficulty = Difficulty.Normal;
+    private int[,] _waveCard = { { 1, 2 }, { 2, 2 }, { 2, 3 } };
     private int _wave = 1;
-    private Vector2Int _difficulty = new Vector2Int(1, 2);
+    private int _drawCount;
     private HeroType _summonHero;
     private List<int> _summonRooms = new();
+    private float _elapsedTime;
 
     private void Start() => Init();
     private void Update() => Progress();
 
     public void ChangeGuildState(GuildState state)
     {
+        _elapsedTime = 0;
         _state = state;
         CheckHeroState();
 
@@ -64,9 +70,16 @@ public class Guild : MonoBehaviour
 
     private void Progress()
     {
-        if (_state == GuildState.None)
+        _elapsedTime += Time.deltaTime;
+        
+
+        if (_elapsedTime < UPDATE_TIME || _state == GuildState.None)
         {
             return;
+        }
+        else if (_state == GuildState.Start)
+        {
+            StartTurn();
         }
         else if (_state == GuildState.Draw)
         {
@@ -102,17 +115,33 @@ public class Guild : MonoBehaviour
         }
     }
 
-    private void Draw()
+    private void StartTurn()
     {
-        if(_guildDeck.Count == 0)
+        if (_guildDeck.Count == 0)
         {
             _wave++;
             Shuffle();
         }
 
+        _drawCount = _waveCard[(int)_difficulty, _wave - 1];
+
+        ChangeGuildState(GuildState.Draw);
+    }
+
+    private void Draw()
+    {
+        if (_guildDeck.Count == 0)
+        {
+            _drawCount = 0;
+            ChangeGuildState(GuildState.End);
+            return;
+        }
+
         GuildCard card = _guildDeck[0];
         _guildDeck.RemoveAt(0);
         _guildOpen.Add(card);
+        _drawCount--;
+
         _summonHero = card.HeroType;
         _summonRooms = DungeonMap.Instance.GetRoomNumbersOfType(card.RoomType);
 
@@ -196,9 +225,11 @@ public class Guild : MonoBehaviour
                 {
                     room.RemoveResource(ResourceType.Trap);
                     hero.Damage(1);
-                    CheckHeroState();
+                    if (hero.State == UnitState.None)
+                    {
+                        continue;
+                    }
                 }
-
 
                 List<Hero> list = room.Heroes;
 
@@ -255,28 +286,23 @@ public class Guild : MonoBehaviour
 
                     foreach(Hero h in list)
                     {
-                        if (h.State == UnitState.Active) count++;
-                    }
-
-                    if(count >= room.Treasure.Value)
-                    {
-                        for(int i = 0; i < room.Treasure.Value; i++)
-                        {
-                            list[i].Exhaust();
-                        }
-
-                        room.Treasure.Open();
-                        if (DungeonMap.Instance.IsTreasureRoomPlundered())
-                        {
-                            TurnManager.Instance.StateMachine.ChangeState(TurnManager.Instance.GameOverState);
-                            return;
-                        }
-                    }
-                    else
-                    {
-                        foreach(Hero h in room.Heroes)
+                        if (h.State == UnitState.Active)
                         {
                             h.Exhaust();
+                            count++;
+                        }
+
+                        if (count >= room.Treasure.Value)
+                        {
+                            room.Treasure.Open();
+
+                            if (DungeonMap.Instance.IsTreasureRoomPlundered())
+                            {
+                                TurnManager.Instance.StateMachine.ChangeState(TurnManager.Instance.GameOverState);
+                                return;
+                            }
+
+                            break;
                         }
                     }
                 }
@@ -314,10 +340,15 @@ public class Guild : MonoBehaviour
         if (_wave == 2 && _guildDeck.Count == 0 && !DungeonMap.Instance.IsTreasureRoomPlundered())
         {
             TurnManager.Instance.StateMachine.ChangeState(TurnManager.Instance.GameClearState);
-            return;
         }
-
-        TurnManager.Instance.StateMachine.ChangeState(TurnManager.Instance.EndTurnState);
+        else if (_drawCount > 0)
+        {
+            ChangeGuildState(GuildState.Draw);
+        }
+        else
+        {
+            TurnManager.Instance.StateMachine.ChangeState(TurnManager.Instance.EndTurnState);
+        }
     }
 
     private void Init()

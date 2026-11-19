@@ -45,6 +45,7 @@ public class Clan : MonoBehaviour
     public List<int> CanSelectRoomNumber => _canSelectRooms.ToList();
     public int CurrentRoomNumber => _canSelectRooms[_currentIndex];
     public int CurrentIndex => _currentIndex;
+    public bool IsActioned => _isActioned;
 
     private void Awake() => CacheComponents();
     private void OnEnable() => BindInputAction();
@@ -58,6 +59,7 @@ public class Clan : MonoBehaviour
         _selectedAction = ActionManager.Instance.RoomTypeToActionType(initSummonRoom);
         if (_selectedActionList == null) _selectedActionList = new();
         _selectedActionList.Add(_selectedAction);
+        _isActioned = true;
 
         ChangeState(WaitFor.SelectSummonRoom);
     }

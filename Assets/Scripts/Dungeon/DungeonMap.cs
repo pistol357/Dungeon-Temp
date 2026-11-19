@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
-using TMPro;
 using UnityEngine;
 
 public class DungeonMap : MonoBehaviour
@@ -126,6 +124,24 @@ public class DungeonMap : MonoBehaviour
     public List<Resource> GetRoomResources(int number)
     {
         return GetRoomByNumber(number)?.Resources;
+    }
+
+    public int GetCountOfResourceType(ResourceType resourceType)
+    {
+        int count = 0;
+
+        foreach(Room room in _rooms)
+        {
+            foreach(Resource resource in room.Resources)
+            {
+                if (resource.Type == resourceType)
+                {
+                    count++;
+                }
+            }
+        }
+
+        return count;
     }
 
     public bool IsTreasureRoomPlundered()

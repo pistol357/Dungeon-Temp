@@ -1,6 +1,7 @@
 public enum GuildState
 {
     None,
+    Start,
     Draw,
     Summon,
     SummonAction,

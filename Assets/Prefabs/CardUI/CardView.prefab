@@ -205,7 +205,7 @@ MonoBehaviour:
   _selecteCardIamge: {fileID: 9038126580710106369}
   _cardImage: {fileID: 8779888272131141260}
   _actionListView: {fileID: 3779216664939909918}
-  _actionIconPrefab: {fileID: 8507709447292638590, guid: 52cfe7494cdcfa44e967e7453d3aa88b, type: 3}
+  _actionIconPrefab: {fileID: 158960952916834916, guid: 52cfe7494cdcfa44e967e7453d3aa88b, type: 3}
 --- !u!1 &7385757826917318507
 GameObject:
   m_ObjectHideFlags: 0

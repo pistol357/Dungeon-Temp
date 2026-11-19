@@ -18,7 +18,7 @@ public class HeroInvasionState : IState
         }
         else
         {
-            _guild.ChangeGuildState(GuildState.Draw);
+            _guild.ChangeGuildState(GuildState.Start);
         }
     }
 
