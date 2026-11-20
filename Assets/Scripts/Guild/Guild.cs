@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Guild : MonoBehaviour
 {
-    private const float UPDATE_TIME = 0.5f;
+    private const float UPDATE_TIME = 0.3f;
 
     [SerializeField] private GuildData _guildData;
 
@@ -319,7 +319,7 @@ public class Guild : MonoBehaviour
             if (hero.State == UnitState.Active)
             {
                 int nextRoomNumber = DungeonMap.Instance.GetNextRoomNumber(hero.CurrentRoomNumber);
-                ActionManager.Instance.Move(hero, nextRoomNumber, null);
+                ActionManager.Instance.Move(hero, nextRoomNumber, ResourceType.None);
             }
         }
 

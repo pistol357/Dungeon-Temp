@@ -115,6 +115,34 @@ public class ActionManager : MonoBehaviour
         }
     }
 
+    public ActionType ResourceTypeToActionType(ResourceType resource)
+    {
+        if (resource == ResourceType.Bone)
+        {
+            return ActionType.CreateBone;
+        }
+        else if (resource == ResourceType.Book)
+        {
+            return ActionType.CreateBook;
+        }
+        else if (resource == ResourceType.Coin)
+        {
+            return ActionType.CreateCoin;
+        }
+        else if (resource == ResourceType.Frog)
+        {
+            return ActionType.CreateFrog;
+        }
+        else if (resource == ResourceType.Trap)
+        {
+            return ActionType.CreateTrap;
+        }
+        else
+        {
+            return ActionType.None;
+        }
+    }
+
     public void Summon(int roomNumber, IActionable unit)
     {
         Room room = DungeonMap.Instance.GetRoomByNumber(roomNumber);
@@ -136,19 +164,19 @@ public class ActionManager : MonoBehaviour
         Debug.Log($"{unit} 복귀");
     }
 
-    public void Move(IActionable unit, int roomNumber, Resource resource)
+    public void Move(IActionable unit, int roomNumber, ResourceType resource)
     {
         int currentRoomNumber = unit.CurrentRoomNumber;
         Room currentRoom = DungeonMap.Instance.GetRoomByNumber(currentRoomNumber);
         Room nextRoom = DungeonMap.Instance.GetRoomByNumber(roomNumber);
 
         currentRoom.RemoveUnit(unit);
-        if (resource != null) currentRoom.RemoveResource(resource);
+        if (resource != ResourceType.None) currentRoom.RemoveResource(resource);
         nextRoom.AddUnit(unit);
-        if (resource != null) nextRoom.AddResource(resource);
+        if (resource != ResourceType.None) nextRoom.AddResource(resource);
         unit.SetRoom(nextRoom);
 
-        if (resource == null) Debug.Log($"{unit}(이)가 {currentRoom.Name}에서 {nextRoom.Name}(으)로 이동함");
+        if (resource == ResourceType.None) Debug.Log($"{unit}(이)가 {currentRoom.Name}에서 {nextRoom.Name}(으)로 이동함");
         else Debug.Log($"{unit}(이)가 {currentRoom.Name}에서 {resource}를 가지고 {nextRoom.Name}(으)로 이동함");
     }
 
@@ -161,13 +189,13 @@ public class ActionManager : MonoBehaviour
 
         if (DungeonMap.Instance.GetCountOfResourceType(resourceType) < 5)
         {
-            room.AddResource(resource);
+            room.AddResource(resourceType);
 
-            Debug.Log($"{resource.Type}을 {room.Name}에 생산함");
+            Debug.Log($"{resourceType}을 {room.Name}에 생산함");
         }
         else
         {
-            Debug.Log($"{resource.Type}생산 불가");
+            Debug.Log($"{resourceType}생산 불가");
         }
     }
 

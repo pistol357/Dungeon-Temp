@@ -57,5 +57,43 @@ public class ActionView : MonoBehaviour
                 }
             }
         }
+
+        if (_clan.State == WaitFor.SelectActivateAction)
+        {
+            List<ActionType> activateActionList = _clan.CanSelectActivateAction;
+            for (int i = 0; i < activateActionList.Count; i++)
+            {
+                ActionIconView actionIcon = Instantiate(_actionIconPrefab, _actionSlot).GetComponent<ActionIconView>();
+                actionIcon.SetIcon(UIManager.Instance.GetSpriteByActionType(activateActionList[i]));
+
+                if (i == _clan.CurrentIndex)
+                {
+                    actionIcon.Select();
+                }
+                else if (i != _clan.CurrentIndex)
+                {
+                    actionIcon.Unselect();
+                }
+            }
+        }
+
+        if (_clan.State == WaitFor.SelectMoveResource)
+        {
+            List<ResourceType> resourceTypes = _clan.CanSelectResourceTypes;
+            for (int i = 0; i < resourceTypes.Count; i++)
+            {
+                ActionIconView actionIcon = Instantiate(_actionIconPrefab, _actionSlot).GetComponent<ActionIconView>();
+                actionIcon.SetIcon(UIManager.Instance.GetSpriteByActionType(ActionManager.Instance.ResourceTypeToActionType(resourceTypes[i])));
+
+                if (i == _clan.CurrentIndex)
+                {
+                    actionIcon.Select();
+                }
+                else if (i != _clan.CurrentIndex)
+                {
+                    actionIcon.Unselect();
+                }
+            }
+        }
     }
 }

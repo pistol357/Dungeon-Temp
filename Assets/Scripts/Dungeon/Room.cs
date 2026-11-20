@@ -11,7 +11,7 @@ public class Room
     private string _name;
     private List<Monster> _monsters = new();
     private List<Hero> _heroes = new();
-    private List<Resource> _resources = new();
+    private Dictionary<ResourceType, int> _resources = new();
     private Treasure _treasure;
 
     public int RoomNumber => _roomNumber;
@@ -20,7 +20,7 @@ public class Room
     public RoomType RoomType => _roomType;
     public List<Monster> Monsters => _monsters;
     public List<Hero> Heroes => _heroes;
-    public List<Resource> Resources => _resources;
+    public Dictionary<ResourceType, int> Resources => _resources;
     public Treasure Treasure => _treasure;
 
     public Room(RoomData data, int num, TreasureData treasureData)
@@ -60,42 +60,26 @@ public class Room
         Debug.Log($"{unit}(이)가 {_name}에 존재하지 않음");
     }
 
-    public void AddResource(Resource resource)
+    public void AddResource(ResourceType resourceType)
     {
-        if (resource == null) return;
-        _resources.Add(resource);
-    }
+        if (resourceType == ResourceType.None) return;
 
-    public void RemoveResource(Resource resource)
-    {
-        if (_resources.Contains(resource))
-        {
-            _resources.Remove(resource);
-            return;
-        }
+        if (_resources.ContainsKey(resourceType)) _resources[resourceType]++;
+        else _resources.Add(resourceType, 1);
     }
 
     public void RemoveResource(ResourceType resourceType)
     {
-        foreach(Resource resource in _resources)
+        if (_resources.ContainsKey(resourceType) && _resources[resourceType] > 0)
         {
-            if(resource.Type == resourceType)
-            {
-                RemoveResource(resource);
-                return;
-            }
+            _resources[resourceType]--;
+
+            if (_resources[resourceType] == 0) _resources.Remove(resourceType);
         }
     }
 
     public bool IsTrapExist()
     {
-        if (_resources == null || _resources.Count == 0) return false;
-
-        foreach(Resource resource in _resources)
-        {
-            if (resource.Type == ResourceType.Trap) return true;
-        }
-
-        return false;
+        return _resources.ContainsKey(ResourceType.Trap);
     }
 }

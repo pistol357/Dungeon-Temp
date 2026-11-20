@@ -19,16 +19,9 @@ public class ResourceSlot : MonoBehaviour
 
     private void RefreshUI()
     {
-        List<Resource> resources = _roomView.GetRoom().Resources.ToList();
-
         int count = 0;
-        foreach(Resource resource in resources)
-        {
-            if (resource.Type == _resourceType)
-            {
-                count++;
-            }
-        }
+
+        if (_roomView.GetRoom().Resources.ContainsKey(_resourceType)) count = _roomView.GetRoom().Resources[_resourceType];
 
         if (count == 0)
         {

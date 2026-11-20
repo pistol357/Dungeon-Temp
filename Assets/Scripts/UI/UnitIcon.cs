@@ -1,16 +1,33 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UnitIcon : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    [SerializeField] private Image _selectedImage;
+    [SerializeField] private Image _unitIcon;
+
+    public void SetIcon(Sprite sprite)
     {
-        
+        _unitIcon.sprite = sprite;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void Active()
     {
-        
+        _unitIcon.color = Color.white;
+    }
+
+    public void Exhaust()
+    {
+        _unitIcon.color = Color.grey;
+    }
+
+    public void Select()
+    {
+        _selectedImage.enabled = true;
+    }
+
+    public void Unselect()
+    {
+        _selectedImage.enabled = false;
     }
 }

@@ -1,3 +1,4 @@
+using System.Threading;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,7 +7,7 @@ public class RoomView : MonoBehaviour
     [SerializeField] private int _roomNumber;
     [SerializeField] private Transform _monsterPosition;
     [SerializeField] private Transform _heroPosition;
-    [SerializeField] private Image _unitPrefab;
+    [SerializeField] private UnitIcon _unitPrefab;
 
     private Clan _clan => TurnManager.Instance.CurrentTurnClan;
 
@@ -28,17 +29,22 @@ public class RoomView : MonoBehaviour
 
         foreach (Monster monster in room.Monsters)
         {
-            Instantiate(_unitPrefab, _monsterPosition).sprite = monster.Icon;
+            UnitIcon monsterIcon = Instantiate(_unitPrefab, _monsterPosition);
+            monsterIcon.SetIcon(monster.Icon);
+
+            if (_clan.State == WaitFor.SelectMonster && _clan.CurrentMonster == monster) monsterIcon.Select();
         }
 
         foreach (Hero hero in room.Heroes)
         {
-            Image heroImage = Instantiate(_unitPrefab, _heroPosition);
-            heroImage.sprite = hero.Icon;
+            UnitIcon heroIcon = Instantiate(_unitPrefab, _heroPosition);
+            heroIcon.SetIcon(hero.Icon);
+
+            if (_clan.State == WaitFor.SelectTargetHero && _clan.CurrentHero == hero) heroIcon.Select();
 
             if (hero.State == UnitState.Exhausted)
             {
-                heroImage.color = Color.grey;
+                heroIcon.Exhaust();
             }
         }
 
@@ -68,6 +74,12 @@ public class RoomView : MonoBehaviour
         else
         {
             color.a = 1f;
+            GetComponentInChildren<Image>().color = color;
+        }
+
+        if ((_clan.State == WaitFor.SelectMonster || _clan.State == WaitFor.SelectTargetHero))
+        {
+            color.a = 0.05f;
             GetComponentInChildren<Image>().color = color;
         }
     }

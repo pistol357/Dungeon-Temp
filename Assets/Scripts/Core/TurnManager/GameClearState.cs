@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameClearState : IState
 {
@@ -12,6 +13,7 @@ public class GameClearState : IState
     public void Enter()
     {
         Debug.Log($"GAME CLEAR");
+        SceneManager.LoadScene(2);
     }
 
     public void Execute()

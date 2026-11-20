@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class DungeonMap : MonoBehaviour
 {
+    [SerializeField] private DungeonData _dungeonData;
     [SerializeField] private ScenarioData _scenarioData;
     [SerializeField] private List<Room> _rooms;
     [SerializeField] private List<int>[] _connections;
@@ -10,6 +11,8 @@ public class DungeonMap : MonoBehaviour
     private static DungeonMap _instance;
     private List<int> _visited;
     private Dictionary<int, int> _distances;
+    private List<PlayCard> _craftCardDeck = new();
+    private List<PlayCard> _craftCardOpen = new();
 
     public static DungeonMap Instance
     {
@@ -121,7 +124,7 @@ public class DungeonMap : MonoBehaviour
         return _connections[number];
     }
 
-    public List<Resource> GetRoomResources(int number)
+    public Dictionary<ResourceType, int> GetRoomResources(int number)
     {
         return GetRoomByNumber(number)?.Resources;
     }
@@ -132,13 +135,7 @@ public class DungeonMap : MonoBehaviour
 
         foreach(Room room in _rooms)
         {
-            foreach(Resource resource in room.Resources)
-            {
-                if (resource.Type == resourceType)
-                {
-                    count++;
-                }
-            }
+            if (room.Resources.ContainsKey(resourceType)) count += room.Resources[resourceType];
         }
 
         return count;
@@ -193,6 +190,11 @@ public class DungeonMap : MonoBehaviour
 
         RunBreadthFirst(0);
         PrintDistance();
+
+        foreach(PlayCardData cardData in _dungeonData.CraftCards)
+        {
+            _craftCardDeck.Add(new PlayCard(cardData));
+        }
     }
 
     private void PrintDistance()

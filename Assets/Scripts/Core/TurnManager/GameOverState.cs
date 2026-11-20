@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameOverState : IState
 {
@@ -12,6 +13,7 @@ public class GameOverState : IState
     public void Enter()
     {
         Debug.Log($"GAME OVER");
+        SceneManager.LoadScene(3);
     }
 
     public void Execute()

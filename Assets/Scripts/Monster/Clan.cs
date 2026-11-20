@@ -28,8 +28,8 @@ public class Clan : MonoBehaviour
     private Hero _selectedTargetHero;
     private List<int> _canSelectRooms = new();
     private int _selectedTargetRoom = -1;
-    private List<Resource> _canSelectResources = new();
-    private Resource _selectedTargetResource;
+    private List<ResourceType> _canSelectResources = new();
+    private ResourceType _selectedTargetResource;
     private List<ActionType> _canSelectActivateActions = new();
     private ActionType _selectedActivateAction;
     private WaitFor _state;
@@ -42,8 +42,12 @@ public class Clan : MonoBehaviour
     public PlayCard SelectedCard => _selectedCard;
     public List<ActionType> SelectedActionList => _selectedActionList.ToList();
     public ActionType SelectedAction => _selectedAction;
+    public Monster CurrentMonster => _canSelectMonsters[_currentIndex];
+    public Hero CurrentHero => _canSelectHeroes[_currentIndex];
     public List<int> CanSelectRoomNumber => _canSelectRooms.ToList();
+    public List<ActionType> CanSelectActivateAction => _canSelectActivateActions.ToList();
     public int CurrentRoomNumber => _canSelectRooms[_currentIndex];
+    public List<ResourceType> CanSelectResourceTypes => _canSelectResources.ToList();
     public int CurrentIndex => _currentIndex;
     public bool IsActioned => _isActioned;
 
@@ -84,7 +88,7 @@ public class Clan : MonoBehaviour
         }
         else if (action == ActionType.Activate)
         {
-         ActivateAction(action);   
+            ActivateAction(action);
         }
         else if (action == ActionType.SRAttack || action == ActionType.LRAttack)
         {
@@ -111,6 +115,10 @@ public class Clan : MonoBehaviour
         else if (ActionType.CreateCoin <= action && action <= ActionType.CreateTrap)
         {
             ActionManager.Instance.Create(_selectedMonster, action);
+        }
+        else if (action == ActionType.Exchange)
+        {
+
         }
         else if (action == ActionType.Heal)
         {
@@ -202,11 +210,6 @@ public class Clan : MonoBehaviour
                 UnselectAction();
                 return;
             }
-            else if (_canSelectCount == 1)
-            {
-                SelectMonster();
-                return;
-            }
         }
         else if (_state == WaitFor.SelectTargetHero)
         {
@@ -249,10 +252,15 @@ public class Clan : MonoBehaviour
         }
         else if (_state == WaitFor.SelectMoveResource)
         {
-            _canSelectResources = DungeonMap.Instance.GetRoomResources(_selectedMonster.CurrentRoomNumber).ToList();
+            _canSelectResources.Clear();
+            _canSelectResources.Add(ResourceType.None);
+            foreach(ResourceType resourceType in DungeonMap.Instance.GetRoomResources(_selectedMonster.CurrentRoomNumber).Keys)
+            {
+                _canSelectResources.Add(resourceType);
+            }
             _canSelectCount = _canSelectResources.Count;
 
-            if (_canSelectCount == 0)
+            if (_canSelectCount == 1)
             {
                 Action(_selectedAction);
             }
@@ -530,7 +538,7 @@ public class Clan : MonoBehaviour
         _selectedMonster = null;
         _selectedTargetHero = null;
         _selectedTargetRoom = -1;
-        _selectedTargetResource = null;
+        _selectedTargetResource = ResourceType.None;
         _selectedActivateAction = ActionType.None;
         TurnManager.Instance.Guild.CheckHeroState();
         ChangeState(WaitFor.SelectAction);

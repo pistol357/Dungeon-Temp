@@ -46,7 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UIManager
   _actionIcon:
   - {fileID: 21300000, guid: 1fa89ea1bcbe3f34ba5ab15ef8983c35, type: 3}
-  - {fileID: 0}
+  - {fileID: 21300000, guid: 6a74ef02eb9ba3e45a549c8cd1832795, type: 3}
   - {fileID: 21300000, guid: 070ee14d9566f3349acf196c2f18506d, type: 3}
   - {fileID: 21300000, guid: 1b0fa452ead418b418ffac60e3a128d4, type: 3}
   - {fileID: 21300000, guid: 88bedaa8223799b4e85e61811c8f9b56, type: 3}
@@ -59,15 +59,15 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 80f71d0e88c97804f8ab164e0a2cc8b9, type: 3}
   - {fileID: 21300000, guid: 80f71d0e88c97804f8ab164e0a2cc8b9, type: 3}
   - {fileID: 21300000, guid: 80f71d0e88c97804f8ab164e0a2cc8b9, type: 3}
+  - {fileID: 21300000, guid: ec610d5fef611b9479b2b795dc4e6f4d, type: 3}
+  - {fileID: 21300000, guid: 2acbe7e5513812f41bf3ebd30b238fc6, type: 3}
+  - {fileID: 21300000, guid: 44182dcd080908d42b611f3b3a46f6da, type: 3}
+  - {fileID: 21300000, guid: 4baef329c3999ac46b12f1c0388279a4, type: 3}
+  - {fileID: 21300000, guid: c99c4d9e5e63f864e8dd46713fbc3529, type: 3}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 21300000, guid: 96dbb2adc0b06e0429aa78b8e067b1f9, type: 3}
+  - {fileID: 21300000, guid: 36239f9d24537964fbd6cad50de44736, type: 3}

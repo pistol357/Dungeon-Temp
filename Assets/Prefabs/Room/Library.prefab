@@ -198,7 +198,7 @@ MonoBehaviour:
   _roomNumber: 5
   _monsterPosition: {fileID: 4558238445321273693}
   _heroPosition: {fileID: 1284229165997719651}
-  _unitPrefab: {fileID: 6224261400576350631, guid: ec89ae3d04395e243b42aed62fa97d95, type: 3}
+  _unitPrefab: {fileID: 2278353382722966609, guid: ec89ae3d04395e243b42aed62fa97d95, type: 3}
 --- !u!1 &3149268542185349775
 GameObject:
   m_ObjectHideFlags: 0
