@@ -16,4 +16,4 @@ MonoBehaviour:
   _actionList1: 0400000004000000
   _actionList2: 0500000005000000
   _actionList3: 
-  _cardImage: {fileID: 0}
+  _cardImage: {fileID: 21300000, guid: 4332c90877a6179418982fa2da88c900, type: 3}

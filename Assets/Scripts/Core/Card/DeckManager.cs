@@ -8,6 +8,7 @@ public class DeckManager : MonoBehaviour
     [SerializeField] private List<PlayCard> _open = new();
     [SerializeField] private List<PlayCard> _discard = new();
 
+    public List<PlayCard> Deck => _deck;
     public List<PlayCard> Hand => _hand;
     public int HandCount => _hand.Count;
 

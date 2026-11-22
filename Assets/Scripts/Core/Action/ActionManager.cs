@@ -206,6 +206,23 @@ public class ActionManager : MonoBehaviour
         Debug.Log($"{unit} 공격 받음");
     }
 
+    public void Exchange(IActionable unit)
+    {
+        int currentRoomNumber = unit.CurrentRoomNumber;
+        Room room = DungeonMap.Instance.GetRoomByNumber(currentRoomNumber);
+        ResourceType resource = room.ResourceType;
+
+        if(room.Resources != null && room.Resources.ContainsKey(resource))
+        {
+            PlayCard card = DungeonMap.Instance.Exchange(room.CraftCard);
+            if (card != null)
+            {
+                room.RemoveResource(resource);
+                TurnManager.Instance.CurrentTurnClan.DeckManager.Discard(card);
+            }
+        }
+    }
+
     public void Heal(IActionable unit)
     {
         unit.Heal();

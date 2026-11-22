@@ -118,7 +118,7 @@ public class Clan : MonoBehaviour
         }
         else if (action == ActionType.Exchange)
         {
-
+            ActionManager.Instance.Exchange(_selectedMonster);
         }
         else if (action == ActionType.Heal)
         {

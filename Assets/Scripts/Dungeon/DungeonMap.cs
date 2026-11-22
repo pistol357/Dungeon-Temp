@@ -7,11 +7,12 @@ public class DungeonMap : MonoBehaviour
     [SerializeField] private ScenarioData _scenarioData;
     [SerializeField] private List<Room> _rooms;
     [SerializeField] private List<int>[] _connections;
-    [SerializeField] private DeckManager _deckManager;
 
     private static DungeonMap _instance;
     private List<int> _visited;
     private Dictionary<int, int> _distances;
+    private List<PlayCard> _deck = new();
+    private List<PlayCard> _open = new();
 
     public static DungeonMap Instance
     {
@@ -140,6 +141,31 @@ public class DungeonMap : MonoBehaviour
         return count;
     }
 
+    public PlayCard Exchange(CardType cardType)
+    {
+        foreach(PlayCard card in _deck)
+        {
+            if(card.CardData.CardType == cardType)
+            {
+                _deck.Remove(card);
+                return card;
+            }
+        }
+
+        return null;
+    }
+
+    private void Shuffle()
+    {
+        while (0 < _open.Count)
+        {
+            int random = Random.Range(0, _open.Count);
+            PlayCard card = _open[random];
+            _open.RemoveAt(random);
+            _deck.Add(card);
+        }
+    }
+
     public bool IsTreasureRoomPlundered()
     {
         foreach(Room room in _rooms)
@@ -194,10 +220,10 @@ public class DungeonMap : MonoBehaviour
         {
             PlayCardData data = _dungeonData.CraftCards[i];
             PlayCard card = new PlayCard(data);
-            _deckManager.Discard(card);
+            _open.Add(card);
         }
 
-        _deckManager.Shuffle();
+        Shuffle();
     }
 
     private void PrintDistance()
