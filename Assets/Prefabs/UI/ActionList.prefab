@@ -111,7 +111,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1672476081844231364}
-  - component: {fileID: 7909446977993914746}
+  - component: {fileID: 7225609899865045035}
   - component: {fileID: 917672222537474829}
   m_Layer: 5
   m_Name: ActionList
@@ -140,7 +140,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &7909446977993914746
+--- !u!114 &7225609899865045035
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -149,9 +149,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 6900180463823479060}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8c4a774e9a07ec34ebabed00814c67ec, type: 3}
+  m_Script: {fileID: 11500000, guid: f88ff5c2f2cab5b4fb966479087975d7, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ActionListSlot
+  m_EditorClassIdentifier: Assembly-CSharp::ActionListView
   _selectActionList: {fileID: 2574354773672008098}
   _actionIconPrefab: {fileID: 3206059778096666884, guid: 389c5018fa2239849afc654ac5567637, type: 3}
   _actionListSlot: {fileID: 6598795805997628287}

@@ -7,12 +7,11 @@ public class DungeonMap : MonoBehaviour
     [SerializeField] private ScenarioData _scenarioData;
     [SerializeField] private List<Room> _rooms;
     [SerializeField] private List<int>[] _connections;
+    [SerializeField] private DeckManager _deckManager;
 
     private static DungeonMap _instance;
     private List<int> _visited;
     private Dictionary<int, int> _distances;
-    private List<PlayCard> _craftCardDeck = new();
-    private List<PlayCard> _craftCardOpen = new();
 
     public static DungeonMap Instance
     {
@@ -191,10 +190,14 @@ public class DungeonMap : MonoBehaviour
         RunBreadthFirst(0);
         PrintDistance();
 
-        foreach(PlayCardData cardData in _dungeonData.CraftCards)
+        for (int i = 0; i < _dungeonData.CraftCards.Count; i++)
         {
-            _craftCardDeck.Add(new PlayCard(cardData));
+            PlayCardData data = _dungeonData.CraftCards[i];
+            PlayCard card = new PlayCard(data);
+            _deckManager.Discard(card);
         }
+
+        _deckManager.Shuffle();
     }
 
     private void PrintDistance()
