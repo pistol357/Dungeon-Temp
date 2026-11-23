@@ -22,6 +22,10 @@ public class Guild : MonoBehaviour
     private List<int> _summonRooms = new();
     private float _elapsedTime;
 
+    public int Wave => _wave;
+    public int RemainDeckCount => _guildDeck.Count;
+    public int DeckCount => _guildDeck.Count + _guildOpen.Count;
+
     private void Start() => Init();
     private void Update() => Progress();
 

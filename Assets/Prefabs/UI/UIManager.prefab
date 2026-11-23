@@ -71,3 +71,14 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 21300000, guid: 96dbb2adc0b06e0429aa78b8e067b1f9, type: 3}
   - {fileID: 21300000, guid: 36239f9d24537964fbd6cad50de44736, type: 3}
+  _numberIcon:
+  - {fileID: 21300000, guid: 1fc96fafd884c5249aa306e5c24fb4f9, type: 3}
+  - {fileID: 21300000, guid: 8e23475a599123147a9ee3d7b98c8395, type: 3}
+  - {fileID: 21300000, guid: 93f5e6fadd16214459d0917295fb1f11, type: 3}
+  - {fileID: 21300000, guid: 51c5018984d632046a6baade8f201c79, type: 3}
+  - {fileID: 21300000, guid: a3b624bba7eab8a46b3970c85bb7ba30, type: 3}
+  - {fileID: 21300000, guid: 5a89cade02d9e124d898655325cd8109, type: 3}
+  - {fileID: 21300000, guid: bf0a11ac65f67e14f89e695adb1c6946, type: 3}
+  - {fileID: 21300000, guid: b344d03bf22da6e4a8a9d80f595333b1, type: 3}
+  - {fileID: 21300000, guid: 9d0de3286965c9b41a556e7443f0c170, type: 3}
+  - {fileID: 21300000, guid: 9ab0a5bb309575d4d8485d4a79550960, type: 3}

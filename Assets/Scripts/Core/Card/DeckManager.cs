@@ -11,6 +11,7 @@ public class DeckManager : MonoBehaviour
     public List<PlayCard> Deck => _deck;
     public List<PlayCard> Hand => _hand;
     public int HandCount => _hand.Count;
+    public int DeckCount => _deck.Count + _hand.Count + _open.Count + _discard.Count;
 
     private void OnEnable() => BindEndTurnEvent();
     private void OnDisable() => UnbindEndTurnEvent();

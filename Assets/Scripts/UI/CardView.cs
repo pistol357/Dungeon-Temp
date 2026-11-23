@@ -12,6 +12,17 @@ public class CardView : MonoBehaviour
     public void SetCardData(PlayCardData cardData)
     {
         _cardData = cardData;
+
+        if(cardData == null)
+        {
+            _cardImage.enabled = false;
+            _actionListView.gameObject.GetComponent<Image>().enabled = false;
+            foreach (Transform child in _actionListView)
+            {
+                Destroy(child.gameObject);
+            }
+            return;
+        }
         _cardImage.sprite = cardData.CardImage;
         RefreshUI();
     }

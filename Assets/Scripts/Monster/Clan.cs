@@ -37,6 +37,35 @@ public class Clan : MonoBehaviour
     private int _currentIndex;
     private bool _isActioned;
 
+    public Sprite MonsterIcon => _clanData.ClanMonster.Icon;
+    public int ActiveMonsterCount => _activeMonsters.Count;
+    public int MonsterCount => _activeMonsters.Count + _remainMonsters.Count;
+    public int Hp
+    {
+        get
+        {
+            if(_activeMonsters.Count > 0)
+            {
+                return _activeMonsters[0].Hp;
+            }
+
+            return 0;
+        }
+    }
+    public int MaxHp
+    {
+        get
+        {
+            if (_activeMonsters.Count > 0)
+            {
+                return _activeMonsters[0].MaxHp;
+            }
+
+            return 0;
+        }
+    }
+    public int RemainDeckCount => _deckManager.Deck.Count;
+    public int DeckCount => _deckManager.DeckCount;
     public WaitFor State => _state;
     public DeckManager DeckManager => _deckManager;
     public PlayCard SelectedCard => _selectedCard;
@@ -165,6 +194,12 @@ public class Clan : MonoBehaviour
             _isActioned = false;
             _canSelectCards = _deckManager.Hand.ToList();
             _canSelectCount = _canSelectCards.Count;
+
+            if(_canSelectCount == 0)
+            {
+                EndMonsterActionState();
+                return;
+            }
         }
         else if (_state == WaitFor.SelectActionList)
         {

@@ -11,6 +11,8 @@ public class Monster : IActionable
     private Room _currentRoom;
 
     public Sprite Icon => _data.Icon;
+    public int Hp => _hp;
+    public int MaxHp => _data.MaxHp;
     public string Name => _name;
     public UnitState State => _state;
     public int CurrentRoomNumber => _currentRoom.RoomNumber;

@@ -141,6 +141,19 @@ public class DungeonMap : MonoBehaviour
         return count;
     }
 
+    public PlayCardData GetCardData(CardType cardType)
+    {
+        foreach (PlayCard card in _deck)
+        {
+            if (card.CardData.CardType == cardType)
+            {
+                return card.CardData;
+            }
+        }
+
+        return null;
+    }
+
     public PlayCard Exchange(CardType cardType)
     {
         foreach(PlayCard card in _deck)
